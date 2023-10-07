@@ -33,25 +33,22 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         log.info("로그인 시도");
-        try {
-            // 요청 본문이 비어 있는지 확인
-            if (request.getContentLength() == 0) {
-                throw new RuntimeException("요청 본문이 비어 있습니다.");
-            }
-
-            LoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(), LoginRequestDto.class);
-
-            return getAuthenticationManager().authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            requestDto.getUsername(),
-                            requestDto.getPassword(),
-                            null
-                    )
-            );
-        } catch (IOException e) {
-            log.error("예외 발생: ", e);
-            throw new RuntimeException("요청 처리 중 오류가 발생했습니다.");
+        // 요청 본문이 비어 있는지 확인
+        if (request.getContentLength() == 0) {
+            throw new RuntimeException("요청 본문이 비어 있습니다.");
         }
+
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        LoginRequestDto requestDto = new LoginRequestDto(username, password);
+
+        return getAuthenticationManager().authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        requestDto.getUsername(),
+                        requestDto.getPassword(),
+                        null
+                )
+        );
     }
 
     @Override
@@ -65,6 +62,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String refreshToken = refreshTokenService.createRefreshToken(username ,role);
         jwtUtil.addJwtToCookie(token, refreshToken, response);
 
+        response.sendRedirect("/");
 //        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
     }
 

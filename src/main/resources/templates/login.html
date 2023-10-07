@@ -41,7 +41,7 @@
 <body>
 <div class="login-container">
   <h2>로그인</h2>
-  <form id="login-form">
+  <form id="login-form" action="/auth/users/sign-in" method="POST">
     <label for="username">사용자 이름:</label>
     <input type="text" id="username" name="username" required>
 
@@ -49,7 +49,21 @@
     <input type="password" id="password" name="password" required>
 
     <input type="submit" value="로그인">
+<!--    <button id="login-id-submit" onclick="onLogin()">로그인</button>-->
   </form>
 </div>
 </body>
+<!--<script>-->
+<!--  function onLogin() {-->
+<!--    let username = $('#username').val();-->
+<!--    let password = $('#password').val();-->
+
+<!--    $.ajax({-->
+<!--      type: "POST",-->
+<!--      url: `/auth/users/sign-in`,-->
+<!--      contentType: "application/json",-->
+<!--      data: JSON.stringify({username: username, password: password}),-->
+<!--    });-->
+<!--  }-->
+<!--</script>-->
 </html>

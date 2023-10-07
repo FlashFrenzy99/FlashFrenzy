@@ -28,6 +28,15 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
 
+
+        if (req.getRequestURI().equals("/auth/users/sign-in") ||
+                req.getRequestURI().equals("/auth/users/sign-up") ||
+                req.getRequestURI().equals("/") ||
+                req.getRequestURI().equals("/health")) {
+            log.info("Pass Authorization : " + req.getRequestURI());
+            filterChain.doFilter(req, res);
+            return;
+        }
         //access 토큰 값
         String accessTokenValue = jwtUtil.getTokenFromRequest(req);
         //refresh 토큰 값
