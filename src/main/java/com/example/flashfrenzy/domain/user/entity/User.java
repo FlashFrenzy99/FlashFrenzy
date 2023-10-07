@@ -4,6 +4,7 @@ import com.example.flashfrenzy.domain.basket.entity.Basket;
 import com.example.flashfrenzy.domain.order.entity.Order;
 import com.example.flashfrenzy.global.entity.TimeStamp;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -38,4 +39,12 @@ public class User extends TimeStamp {
 
     @OneToMany(mappedBy = "user")
     private List<Order> orderList = new ArrayList<>();
+
+    public User(String username, String password, UserRoleEnum role, String email) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.email = email;
+    }
+
 }
