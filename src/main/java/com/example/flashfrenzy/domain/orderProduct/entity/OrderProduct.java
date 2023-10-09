@@ -1,8 +1,10 @@
 package com.example.flashfrenzy.domain.orderProduct.entity;
 
+import com.example.flashfrenzy.domain.basketProdcut.entity.BasketProduct;
 import com.example.flashfrenzy.domain.order.entity.Order;
 import com.example.flashfrenzy.domain.product.entity.Product;
 import jakarta.persistence.*;
+import java.awt.Menu;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,5 +27,14 @@ public class OrderProduct {
     private Product product;
 
     @Column(name = "count", nullable = false)
-    private int count;  // 주문 수량
+    private Long count;  // 주문 수량
+
+    public OrderProduct(BasketProduct basketProduct) {
+        this.product = basketProduct.getProduct();
+        this.count = basketProduct.getCount();
+    }
+
+    public void addOrder(Order order) {
+        this.order = order;
+    }
 }

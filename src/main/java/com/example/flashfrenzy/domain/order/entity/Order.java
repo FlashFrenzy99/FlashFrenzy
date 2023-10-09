@@ -1,9 +1,11 @@
 package com.example.flashfrenzy.domain.order.entity;
 
+import com.example.flashfrenzy.domain.basketProdcut.entity.BasketProduct;
 import com.example.flashfrenzy.domain.orderProduct.entity.OrderProduct;
 import com.example.flashfrenzy.domain.user.entity.User;
 import com.example.flashfrenzy.global.entity.TimeStamp;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,11 +23,20 @@ public class Order extends TimeStamp {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderProduct> orderProductList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
+    public void addUser(User user) {
+        this.user = user;
+        user.getOrderList().add(this);
+    }
+
+    public void addOrderProduct(OrderProduct orderProduct) {
+        this.orderProductList.add(orderProduct);
+        orderProduct.addOrder(this);
+    }
 }
