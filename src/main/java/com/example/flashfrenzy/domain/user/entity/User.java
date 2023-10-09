@@ -47,4 +47,8 @@ public class User extends TimeStamp {
         basket.setUser(this);
     }
 
+    public void addOrder(Order order) {
+        this.orderList.add(order);
+    }
+
 }
