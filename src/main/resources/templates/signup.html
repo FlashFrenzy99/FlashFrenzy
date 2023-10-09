@@ -2,9 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원가입</title>
 </head>
 <body>
-회원가입 페이지
+<h1>회원가입</h1>
+<form action="/auth/users/sign-up" method="POST">
+  <label for="username">사용자 이름:</label>
+  <input type="text" id="username" name="username" required><br><br>
+
+  <label for="password">비밀번호:</label>
+  <input type="password" id="password" name="password" required><br><br>
+
+  <label for="email">이메일:</label>
+  <input type="email" id="email" name="email" required><br><br>
+
+  <input type="submit" value="가입하기">
+</form>
 </body>
 </html>
