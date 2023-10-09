@@ -21,7 +21,7 @@ public class Product {
     private String image;
 
     @Column(name = "price", nullable = false)
-    private int price;
+    private Long price;
 
     @Column(name = "category1", nullable = false)
     private String category1; // 대분류  ex) 옷
@@ -32,5 +32,10 @@ public class Product {
     @Column(name = "stock", nullable = false)
     private Long stock;
 
-
+    public void discountStock(Long stock) {
+        if (this.stock < stock) {
+            throw new IllegalArgumentException("재고가 남아있지 않습니다. 남은재고: "+ this.stock );
+        }
+        this.stock -= stock;
+    }
 }

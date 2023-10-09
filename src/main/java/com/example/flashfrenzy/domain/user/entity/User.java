@@ -33,9 +33,22 @@ public class User extends TimeStamp {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Basket basket;
 
     @OneToMany(mappedBy = "user")
     private List<Order> orderList = new ArrayList<>();
+
+    public User(String username, String password, UserRoleEnum role, String email, Basket basket) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.email = email;
+        basket.setUser(this);
+    }
+
+    public void addOrder(Order order) {
+        this.orderList.add(order);
+    }
+
 }
