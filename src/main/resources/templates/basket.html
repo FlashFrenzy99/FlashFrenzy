@@ -1,16 +1,18 @@
 <!-- basket.html (Thymeleaf 템플릿) -->
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
   <meta charset="UTF-8">
   <title>Basket</title>
 </head>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
 <body>
 <h1>Your Basket</h1>
 
 <table>
   <thead>
-  <tr>
+  <tr id="test">
     <th>Product ID</th>
     <th>Title</th>
     <th>Image</th>
@@ -30,7 +32,15 @@
     <td th:text="${product.category1}"></td>
     <td th:text="${product.category2}"></td>
     <td th:text="${product.stock}"></td>
+    <td>
+      <form action="#" th:action="@{/api/baskets/{id}(id = ${product.basketProductId})}" method="#" th:method="delete">
+        <input type="hidden" name="_method" value="delete">
+        <button th:text="삭제하기"></button>
+      </form>
+    </td>
+
   </tr>
+
   </tbody>
 </table>
 </body>

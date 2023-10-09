@@ -26,7 +26,6 @@ public class BasketController {
 
     @GetMapping
     public String getBasket(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model){
-
         List<BasketProductResponseDto> basketProducts = basketService.getBasket(userDetails.getUser());
         model.addAttribute("basketProducts", basketProducts);
         return "basket";
@@ -35,11 +34,13 @@ public class BasketController {
     @PostMapping("/{id}")
     @ResponseBody
     public void addBasket(@PathVariable(value = "id") Long basketId, @ModelAttribute BasketRequestForm requestForm){
+        System.out.println("POST HERE");
         basketService.addBasket(basketId, requestForm);
     }
 
     @DeleteMapping("/{id}")         // basketProduct_id
     public String deleteBasket(@PathVariable(value = "id") Long basketProductId){
+        System.out.println("hello");
         basketService.deleteBasket(basketProductId);
         return "redirect:/api/baskets";
     }
