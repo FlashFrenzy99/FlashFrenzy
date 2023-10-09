@@ -4,12 +4,13 @@ import com.example.flashfrenzy.domain.product.dto.ProductResponseDto;
 import com.example.flashfrenzy.domain.product.entity.Product;
 import com.example.flashfrenzy.domain.product.repository.ProductRepository;
 import java.util.List;
-import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ProductService {
 
     private final ProductRepository productRepository;

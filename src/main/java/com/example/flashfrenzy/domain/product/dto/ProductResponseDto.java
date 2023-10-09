@@ -12,7 +12,7 @@ public class ProductResponseDto {
 
     private String image;
 
-    private int price;
+    private Long price;
 
     private String category1; // 대분류  ex) 옷
 
