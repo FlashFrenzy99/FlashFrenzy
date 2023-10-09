@@ -11,6 +11,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public String ExHandler(Exception ex) {
         log.error(ex.getMessage());
+        ex.printStackTrace();
         return "redirect:/";
     }
 }
