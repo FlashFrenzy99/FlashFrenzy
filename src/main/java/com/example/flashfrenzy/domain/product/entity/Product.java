@@ -1,5 +1,6 @@
 package com.example.flashfrenzy.domain.product.entity;
 
+import com.example.flashfrenzy.global.data.dto.ItemDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,9 +33,18 @@ public class Product {
     @Column(name = "stock", nullable = false)
     private Long stock;
 
+    public Product(ItemDto itemDto) {
+        this.title = itemDto.getTitle();
+        this.image = itemDto.getImage();
+        this.price = itemDto.getPrice();
+        this.category1 = itemDto.getCategory1();
+        this.category2 = itemDto.getCategory2();
+        this.stock = itemDto.getStock();
+    }
+
     public void discountStock(Long stock) {
         if (this.stock < stock) {
-            throw new IllegalArgumentException("재고가 남아있지 않습니다. 남은재고: "+ this.stock );
+            throw new IllegalArgumentException("재고가 남아있지 않습니다. 남은재고: " + this.stock);
         }
         this.stock -= stock;
     }
