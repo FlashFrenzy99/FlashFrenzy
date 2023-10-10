@@ -1,6 +1,36 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="headerFragment">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+    <script>
+        const host = 'http://' + window.location.host;
+        function logout() {
+            // 토큰 삭제
+            console.log("logout 진입")
+            document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
+            window.location.href = host + '/auth/users/sign-in-page';
+        }
+        const getCookieValue = (key) => {
+            const cookies = document.cookie.split('; ').reduce((acc, cookie) => {
+                const [k, v] = cookie.split('=');
+                acc[k] = v;
+                return acc;
+            }, {});
+
+            return cookies[key] || null;
+        };
+        $(document).ready(function () {
+            if(document.cookie!=null){
+                $('#sign-in').hide()
+                $('#sign-up').hide()
+            }else{
+                $('#my-page').hide()
+                $('#log-out').hide()
+            }
+        })
+    </script>
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -41,15 +71,18 @@
                         src="https://th.bing.com/th?q=%ec%a7%91+%ec%95%84%ec%9d%b4%ec%bd%98&w=120&h=120&c=1&rs=1&qlt=90&cb=1&pid=InlineBlock&mkt=ko-KR&cc=KR&setlang=ko&adlt=strict&t=1&mw=247"
                         alt="로고" width="40" height="40"></a>
             </div>
-            <a href="/auth/users/sign-up-page">회원가입</a>
-            <a href="/auth/users/sign-in-page">로그인</a>
-            <a href="/auth/users/my-page">마이페이지</a>
+            <a href="/auth/users/sign-up-page" id="sign-up">회원가입</a>
+            <a href="/auth/users/sign-in-page" id="sign-in">로그인</a>
+            <a id="log-out" onclick="logout()">로그아웃</a>
+            <a href="/auth/users/my-page" id="my-page">마이페이지</a>
             <a href="/api/baskets">장바구니</a>
         </div>
         <div>
-
+            <form id="search-input" action="/api/products/search" method="get">
+                <input type="text" id="query" name="query" required>
+                <input type="submit" value="검색하기">
+            </form>
         </div>
     </head>
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 </th:block>
 </html>
