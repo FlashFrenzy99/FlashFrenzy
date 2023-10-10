@@ -15,7 +15,7 @@ public class ItemDto {
     private Long stock;
 
     public ItemDto(JSONObject itemJson) {
-        this.title = itemJson.getString("title");
+        this.title = itemJson.getString("title").replace("<b>","").replace("</b>","");
         this.image = itemJson.getString("image");
         this.price = (long) itemJson.getInt("lprice");
         this.category1 = itemJson.getString("category1");

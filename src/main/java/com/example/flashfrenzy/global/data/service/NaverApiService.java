@@ -36,7 +36,7 @@ public class NaverApiService {
     @Value("${naver.client-secret}")
     private String clientSecret;
 
-    public void searchItems(String query, String page, ProductRepository productRepository) {
+    public void searchItems(String query, String page) {
         // 요청 URL 만들기
         URI uri = UriComponentsBuilder
                 .fromUriString("https://openapi.naver.com")
