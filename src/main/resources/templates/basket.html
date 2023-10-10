@@ -1,47 +1,40 @@
-<!-- basket.html (Thymeleaf 템플릿) -->
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-<head>
-  <meta charset="UTF-8">
-  <title>Basket</title>
-</head>
-<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/default_layout" lang="en">
+<th:block layout:fragment="content">
+    <h1>Your Basket</h1>
 
-<body>
-<h1>Your Basket</h1>
-
-<table>
-  <thead>
-  <tr id="test">
-    <th>Product ID</th>
-    <th>Title</th>
-    <th>Image</th>
-    <th>Price</th>
-    <th>Category 1</th>
-    <th>Category 2</th>
-    <th>Stock</th>
-  </tr>
-  </thead>
-  <tbody>
-  <!-- 반복문을 사용하여 리스트를 순회하고 각 항목을 표시 -->
-  <tr th:each="product : ${basketProducts}">
-    <td th:text="${product.basketProductId}"></td>
-    <td th:text="${product.title}"></td>
-    <td th:text="${product.image}"></td>
-    <td th:text="${product.price}"></td>
-    <td th:text="${product.category1}"></td>
-    <td th:text="${product.category2}"></td>
-    <td th:text="${product.stock}"></td>
-    <td>
-      <form action="#" th:action="@{/api/baskets/{id}(id = ${product.basketProductId})}" method="#" th:method="delete">
-        <input type="hidden" name="_method" value="delete">
-        <button th:text="삭제하기"></button>
-      </form>
-    </td>
-
-  </tr>
-
-  </tbody>
-</table>
-</body>
+    <table>
+        <thead>
+        <tr id="test">
+            <th>Product ID</th>
+            <th>Title</th>
+            <th>Image</th>
+            <th>Price</th>
+            <th>Category 1</th>
+            <th>Category 2</th>
+            <th>Stock</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- 반복문을 사용하여 리스트를 순회하고 각 항목을 표시 -->
+        <tr th:each="product : ${basketProducts}">
+            <td th:text="${product.basketProductId}"></td>
+            <td th:text="${product.title}"></td>
+            <td th:text="${product.image}"></td>
+            <td th:text="${product.price}"></td>
+            <td th:text="${product.category1}"></td>
+            <td th:text="${product.category2}"></td>
+            <td th:text="${product.stock}"></td>
+            <td>
+                <form action="#" th:action="@{/api/baskets/{id}(id = ${product.basketProductId})}" method="#"
+                      th:method="delete">
+                    <input type="hidden" name="_method" value="delete">
+                    <button th:text="삭제하기"></button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</th:block>
 </html>

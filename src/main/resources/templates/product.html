@@ -4,18 +4,25 @@
   <title>Product Details</title>
 </head>
 <body>
-<h1>Product Details</h1>
-<div th:if="${product}">
-  <p>ID: <span th:text="${product.id}"></span></p>
-  <p>Title: <span th:text="${product.title}"></span></p>
-  <p>Image: <span th:text="${product.image}"></span></p>
-  <p>Price: <span th:text="${product.price}"></span></p>
-  <p>Category 1: <span th:text="${product.category1}"></span></p>
-  <p>Category 2: <span th:text="${product.category2}"></span></p>
-  <p>Stock: <span th:text="${product.stock}"></span></p>
-</div>
-<div th:unless="${product}">
-  <p>Product not found.</p>
-</div>
+
 </body>
+</html>
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/default_layout" lang="en">
+<th:block layout:fragment="content">
+  <h1>Product Details</h1>
+  <div th:if="${product}">
+    <p>ID: <span th:text="${product.id}"></span></p>
+    <p>Title: <span th:text="${product.title}"></span></p>
+    <p>Image: <span th:text="${product.image}"></span></p>
+    <p>Price: <span th:text="${product.price}"></span></p>
+    <p>Category 1: <span th:text="${product.category1}"></span></p>
+    <p>Category 2: <span th:text="${product.category2}"></span></p>
+    <p>Stock: <span th:text="${product.stock}"></span></p>
+  </div>
+  <div th:unless="${product}">
+    <p>Product not found.</p>
+  </div>
+</th:block>
 </html>
