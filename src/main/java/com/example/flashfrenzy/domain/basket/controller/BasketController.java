@@ -32,15 +32,13 @@ public class BasketController {
     }
 
     @PostMapping("/{id}")
-    @ResponseBody
-    public void addBasket(@PathVariable(value = "id") Long basketId, @ModelAttribute BasketRequestForm requestForm){
-        System.out.println("POST HERE");
+    //@ResponseBody
+    public String addBasket(@PathVariable(value = "id") Long basketId, @ModelAttribute BasketRequestForm requestForm){
         basketService.addBasket(basketId, requestForm);
+        return "redirect:/api/baskets";
     }
-
     @DeleteMapping("/{id}")         // basketProduct_id
     public String deleteBasket(@PathVariable(value = "id") Long basketProductId){
-        System.out.println("hello");
         basketService.deleteBasket(basketProductId);
         return "redirect:/api/baskets";
     }

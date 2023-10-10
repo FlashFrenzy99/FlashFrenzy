@@ -1,26 +1,50 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-  <title>Product Details</title>
-</head>
-<body>
-
-</body>
-</html>
-
-<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/default_layout" lang="en">
 <th:block layout:fragment="content">
+  <script>
+    function parseJwt (token) {
+      var base64Url = token.split('.')[1];
+      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      return JSON.parse(jsonPayload);
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      // 폼을 모두 가져옵니다.
+      const forms = document.querySelectorAll('.dynamic-form');
+      console.log(forms)
+      // 각 폼에 대한 반복문을 실행합니다.
+      forms.forEach(function(form) {
+        form.addEventListener('submit', function(event) {
+          const token = getCookieValue('Authorization')
+          console.log(parseJwt(token))
+          const id = parseJwt(token)['basket']
+          form.action = '/api/baskets/' + id;
+        });
+      });
+    });
+
+  </script>
   <h1>Product Details</h1>
   <div th:if="${product}">
     <p>ID: <span th:text="${product.id}"></span></p>
     <p>Title: <span th:text="${product.title}"></span></p>
-    <p>Image: <span th:text="${product.image}"></span></p>
+    <p>Image:
+    <img th:src="${product.image}" width="100" height="120">
+    </p>
     <p>Price: <span th:text="${product.price}"></span></p>
-    <p>Category 1: <span th:text="${product.category1}"></span></p>
-    <p>Category 2: <span th:text="${product.category2}"></span></p>
+    <p>대분류: <span th:text="${product.category1}"></span></p>
+    <p>중분류: <span th:text="${product.category2}"></span></p>
     <p>Stock: <span th:text="${product.stock}"></span></p>
+    <form action="#" class="dynamic-form" method="post">
+      <input type="text" name="count" required>
+      <input type="text" name="productId" th:value="${product.id}" hidden="hidden">
+      <input type="submit" value="장바구니에 담기">
+    </form>
   </div>
+
+
   <div th:unless="${product}">
     <p>Product not found.</p>
   </div>
