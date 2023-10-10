@@ -56,10 +56,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         log.info("로그인 성공 및 JWT 생성");
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
         UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
+        Long basketkey = (((UserDetailsImpl) authResult.getPrincipal()).getUser().getBasket().getId());
 
-
-        String token = jwtUtil.createToken(username, role);
-        String refreshToken = refreshTokenService.createRefreshToken(username ,role);
+        String token = jwtUtil.createToken(username, role,basketkey);
+        String refreshToken = refreshTokenService.createRefreshToken(username ,role, basketkey);
         jwtUtil.addJwtToCookie(token, refreshToken, response);
 
         response.sendRedirect("/");

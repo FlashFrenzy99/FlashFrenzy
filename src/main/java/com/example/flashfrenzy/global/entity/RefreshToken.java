@@ -11,8 +11,10 @@ public class RefreshToken {
     private String username;
     private UserRoleEnum role;
 
-    public RefreshToken(String username, UserRoleEnum role) {
+    private Long Key;
+    public RefreshToken(String username, UserRoleEnum role, Long key) {
         this.username = username;
         this.role = role;
+        this.Key = key;
     }
 }
