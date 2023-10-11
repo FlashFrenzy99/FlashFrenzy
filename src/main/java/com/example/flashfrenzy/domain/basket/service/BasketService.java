@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
+@Slf4j(topic = "Basket API")
 @Transactional(readOnly = true)
 public class BasketService {
 
@@ -27,7 +27,7 @@ public class BasketService {
     private final ProductRepository productRepository;
 
     public List<BasketProductResponseDto> getBasket(User user) {
-
+        log.debug("장바구니 조회");
         Basket basket = basketRepository.findById(user.getBasket().getId()).orElseThrow(() ->
                 new IllegalArgumentException("해당 장바구니를 찾을 수 없습니다."));
 
@@ -39,6 +39,7 @@ public class BasketService {
 
     @Transactional
     public void addBasket(Long basketId, BasketRequestForm basketRequestDto) {
+        log.debug("장바구니 담기");
         Basket basket = basketRepository.findById(basketId).orElseThrow(() ->
                 new IllegalArgumentException("해당 장바구니를 찾을 수 없습니다.")
         );
@@ -52,6 +53,7 @@ public class BasketService {
 
         // 이미 장바구니에 물품이 존재한다면 수량만 더해주기
         if (optionalBasketProduct.isPresent()) {
+            log.debug("장바구니에 물품이 존재 할경우 처리");
             BasketProduct duplicatedBasketProduct = optionalBasketProduct.get();
             long count = duplicatedBasketProduct.getCount() + basketRequestDto.getCount();
             duplicatedBasketProduct.countUpdate(count);
@@ -66,6 +68,7 @@ public class BasketService {
 
     @Transactional
     public void deleteBasket(Long basketProductId) {
+        log.debug("장바구니 상품 삭제");
         BasketProduct basketProduct = basketProductRepository.findById(basketProductId).orElseThrow(
                 () -> new IllegalArgumentException("장바구니 내부에 상품이 존재하지 않습니다.")
         );
