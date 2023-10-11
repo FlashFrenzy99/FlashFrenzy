@@ -14,10 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class NaverApiController {
 
     private final NaverApiService naverApiService;
-    private final ProductRepository productRepository;
 
     @GetMapping("/search")
     public void searchItems(@RequestParam String query, @RequestParam String page)  {
-        naverApiService.searchItems(query, page, productRepository);
+        naverApiService.searchItems(query, page);
     }
 }
