@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 @Transactional(readOnly = true)
 public class BasketService {
 
@@ -29,7 +28,7 @@ public class BasketService {
     public List<BasketProductResponseDto> getBasket(User user) {
 
         Basket basket = basketRepository.findById(user.getBasket().getId()).orElseThrow(() ->
-                new IllegalArgumentException("해당 장바구니를 찾을 수 없습니다."));
+            new IllegalArgumentException("해당 장바구니를 찾을 수 없습니다."));
 
         List<BasketProduct> list = basket.getList();
 

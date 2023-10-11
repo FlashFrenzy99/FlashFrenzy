@@ -3,6 +3,7 @@ package com.example.flashfrenzy.global.security;
 import com.example.flashfrenzy.domain.user.entity.User;
 import com.example.flashfrenzy.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
