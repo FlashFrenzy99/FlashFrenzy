@@ -10,7 +10,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public String ExHandler(Exception ex) {
-        log.error(ex.getMessage());
         log.error(ex.toString());
         ex.printStackTrace();
         return "redirect:/";
