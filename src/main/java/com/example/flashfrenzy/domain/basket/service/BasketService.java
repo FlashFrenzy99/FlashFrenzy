@@ -32,6 +32,7 @@ public class BasketService {
                 new IllegalArgumentException("해당 장바구니를 찾을 수 없습니다."));
 
         List<BasketProduct> list = basket.getList();
+
         return list.stream()
                 .map(BasketProductResponseDto::new).toList();
     }
@@ -41,7 +42,6 @@ public class BasketService {
         Basket basket = basketRepository.findById(basketId).orElseThrow(() ->
                 new IllegalArgumentException("해당 장바구니를 찾을 수 없습니다.")
         );
-
         Product product = productRepository.findById(basketRequestDto.getProductId())
                 .orElseThrow(() ->
                         new IllegalArgumentException("해당 상품을 찾을 수 없습니다.")
@@ -64,6 +64,7 @@ public class BasketService {
         basketProductRepository.save(basketProduct);
     }
 
+    @Transactional
     public void deleteBasket(Long basketProductId) {
         BasketProduct basketProduct = basketProductRepository.findById(basketProductId).orElseThrow(
                 () -> new IllegalArgumentException("장바구니 내부에 상품이 존재하지 않습니다.")

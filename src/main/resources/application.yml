@@ -10,7 +10,15 @@ spring:
     hibernate:
       ddl-auto: update
 
+  mvc:
+    hiddenmethod:
+      filter:
+        enable: true
+
+
+
 server:
   error:
     include-exception: true
     include-stacktrace: always
+

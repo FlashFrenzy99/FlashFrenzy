@@ -49,6 +49,7 @@ public class JwtUtil {
 
     // 사용자 권한 값의 KEY, 권한을 구분하기 위함
     public static final String AUTHORIZATION_KEY = "auth";
+    public static final String BASKET_KEY = "basket";
     // Token 식별자
     public static final String BEARER_PREFIX = "Bearer ";
     // 토큰 만료시간
@@ -75,13 +76,14 @@ public class JwtUtil {
 
     //JWT 생성
     //토큰 생성
-    public String createToken(String username, UserRoleEnum role) {
+    public String createToken(String username, UserRoleEnum role, Long basketId) {
         Date date = new Date();
 
         return BEARER_PREFIX +
                 Jwts.builder()
                         .setSubject(username) // 사용자 식별자값(ID)
                         .claim(AUTHORIZATION_KEY, role) // key 값으로 꺼내어 쓸 수 있다.
+                        .claim(BASKET_KEY, basketId)
                         .setExpiration(new Date(date.getTime() + TOKEN_TIME)) // 만료 시간
                         .setIssuedAt(date) // 발급일
                         .signWith(key, signatureAlgorithm) // 암호화 알고리즘
@@ -145,14 +147,15 @@ public class JwtUtil {
 
                 String username = refreshToken.getUsername();
                 UserRoleEnum role = refreshToken.getRole();
+                Long key = refreshToken.getKey();
                 //access 토큰 다시 발급 (Bearer ~~)
-                accessToken = createToken(username, role);
+                accessToken = createToken(username, role, key);
 
                 //Refresh Token Rotation (기존 Refresh 토큰 제거 후 새로 발급)
                 Long refreshExpireTime = refreshTokenService.getRefreshTokenTimeToLive(REFRESH_PREFIX + refreshTokenValue);
                 redisRepository.setExpire(REFRESH_PREFIX + refreshTokenValue, 0L);
 
-                String newRefreshToken = refreshTokenService.refreshTokenRotation(username, role, refreshExpireTime);
+                String newRefreshToken = refreshTokenService.refreshTokenRotation(username, role, refreshExpireTime, key);
 
                 addJwtToCookie(accessToken, newRefreshToken, res);
 
