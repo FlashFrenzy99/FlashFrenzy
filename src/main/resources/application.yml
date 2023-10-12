@@ -1,6 +1,9 @@
 spring:
   profiles:
-    active: local
+    default: local
+    group:
+      "local": local, secret
+      "prod": prod, secret
 
   jpa:
     properties:
@@ -25,19 +28,12 @@ server:
     include-stacktrace: always
 
 ---
-
 spring:
-  profiles:
-    default: local
-    include: secret, console-logging, file-logging
-logging:
-  level:
-    root: debug
+  config:
+    activate:
+      on-profile: local
 ---
 spring:
-  profiles:
-    default: prod
-    include: file-logging
-logging:
-  level:
-    root: info
+  config:
+    activate:
+      on-profile: prod
