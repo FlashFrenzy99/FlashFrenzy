@@ -1,78 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="30 seconds">
-<!--  <springProperty name="SLACK_WEBHOOK_URI" source="logging.slack.webhook-uri"/>-->
+  <timestamp key="dailyLog" datePattern="yyyy-MM-dd"/>
   <property name="LOG_PATH" value="logs"/>
   <property name="LOG_PATTERN"
     value="[%d{yyyy-MM-dd HH:mm:ss}:%-3relative] [%thread] %-5level %logger{35} - %msg%n"/>
-<!--  <property name="LOG_PATTERN"-->
-<!--    value="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%thread] %5level %logger - %msg%n"/>-->
-  <timestamp key="dailyLog" datePattern="yyyy-MM-dd"/>
 
-  <springProfile name="console-logging">
-<!--    <include resource="org/springframework/boot/logging/logback/base.xml" />-->
-    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+  <springProfile name="!prod">
+      <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+      <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+    <root level="INFO">
+      <appender-ref ref="CONSOLE"/>
+    </root>
   </springProfile>
 
-  <springProfile name="file-logging">
-    <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
-      <file>${LOG_PATH}/logback/file_${dailyLog}.log</file>
+  <springProfile name="prod">
+    <appender name="FILE-INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+      <file>${LOG_PATH}/info/info_${dailyLog}.log</file>
+      <filter class = "ch.qos.logback.classic.filter.LevelFilter">
+        <level>INFO</level>
+        <onMatch>ACCEPT</onMatch>
+        <onMismatch>DENY</onMismatch>
+      </filter>
       <encoder>
         <pattern>${LOG_PATTERN}</pattern>
       </encoder>
       <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-        <fileNamePattern>${LOG_PATH}/logback/file_${dailyLog}.%d\(.%i\).log</fileNamePattern>
-          <maxFileSize>100MB</maxFileSize>
-          <totalSizeCap>3GB</totalSizeCap>
+        <fileNamePattern>${LOG_PATH}/info/info_${dailyLog}.%d\(.%i\).log</fileNamePattern>
+        <maxFileSize>100MB</maxFileSize>
+        <totalSizeCap>3GB</totalSizeCap>
       </rollingPolicy>
     </appender>
+
+    <appender name="FILE-WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+      <file>${LOG_PATH}/warn/warn_${dailyLog}.log</file>
+      <filter class = "ch.qos.logback.classic.filter.LevelFilter">
+        <level>WARN</level>
+        <onMatch>ACCEPT</onMatch>
+        <onMismatch>DENY</onMismatch>
+      </filter>
+      <encoder>
+        <pattern>${LOG_PATTERN}</pattern>
+      </encoder>
+      <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+        <fileNamePattern> ${LOG_PATH}/warn/warn_${dailyLog}.%d\(.%i\).log</fileNamePattern>
+        <maxFileSize>100MB</maxFileSize>
+        <totalSizeCap>3GB</totalSizeCap>
+      </rollingPolicy>
+    </appender>
+
+    <appender name="FILE-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+      <file>${LOG_PATH}/error/error_${dailyLog}.log</file>
+      <filter class = "ch.qos.logback.classic.filter.LevelFilter">
+        <level>ERROR</level>
+        <onMatch>ACCEPT</onMatch>
+        <onMismatch>DENY</onMismatch>
+      </filter>
+      <encoder>
+        <pattern>${LOG_PATTERN}</pattern>
+      </encoder>
+      <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+        <fileNamePattern> ${LOG_PATH}/error/error_${dailyLog}.%d\(.%i\).log</fileNamePattern>
+        <maxFileSize>100MB</maxFileSize>
+        <totalSizeCap>3GB</totalSizeCap>
+      </rollingPolicy>
+    </appender>
+
+    <root level="INFO">
+      <appender-ref ref="FILE-INFO"/>
+      <appender-ref ref="FILE-WARN"/>
+      <appender-ref ref="FILE-ERROR"/>
+    </root>
   </springProfile>
-
-<!--  <springProfile name="sql-logging">-->
-<!--    <appender name="SQL" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
-<!--      <file>${LOG_PATH}/logback/sql_${dailyLog}.log</file>-->
-<!--      <encoder>-->
-<!--        <pattern>${LOG_PATTERN}</pattern>-->
-<!--      </encoder>-->
-<!--      <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
-<!--        <fileNamePattern>${LOG_PATH}/logback/sql_${dailyLog}.%d\(.%i\).log</fileNamePattern>-->
-<!--        <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">-->
-<!--          <maxFileSize>100MB</maxFileSize>-->
-<!--          <totalSizeCap>3GB</totalSizeCap>-->
-<!--        </timeBasedFileNamingAndTriggeringPolicy>-->
-<!--      </rollingPolicy>-->
-<!--    </appender>-->
-<!--  </springProfile>-->
-
-<!--  <springProfile name="slack-logging">-->
-<!--    <appender name="SLACK" class="com.github.maricn.logback.SlackAppender">-->
-<!--      <layout class="ch.qos.logback.classic.PatternLayout">-->
-<!--        <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %-5level %logger{35} - %msg%n</pattern>-->
-<!--      </layout>-->
-<!--      <webhookUri>${SLACK_WEBHOOK_URI}</webhookUri>-->
-<!--      <username>taggle bot</username>-->
-<!--      <colorCoding>true</colorCoding>-->
-<!--    </appender>-->
-<!--    <appender name="ASYNC_SLACK" class="ch.qos.logback.classic.AsyncAppender">-->
-<!--      <appender-ref ref="SLACK"/>-->
-<!--      <filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
-<!--        <level>ERROR</level>-->
-<!--      </filter>-->
-<!--    </appender>-->
-<!--  </springProfile>-->
-
-  <root>
-    <springProfile name="console-logging">
-      <appender-ref ref="CONSOLE"/>
-    </springProfile>
-    <springProfile name="file-logging">
-      <appender-ref ref="ROLLING"/>
-    </springProfile>
-<!--    <springProfile name="sql-logging">-->
-<!--      <appender-ref ref="SQL"/>-->
-<!--    </springProfile>-->
-<!--    <springProfile name="slack-logging">-->
-<!--      <appender-ref ref="ASYNC_SLACK"/>-->
-<!--    </springProfile>-->
-  </root>
 </configuration>
