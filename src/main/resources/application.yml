@@ -32,6 +32,15 @@ spring:
   config:
     activate:
       on-profile: local
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: info
+#        SQL: debug
+        type:
+          descriptor:
+            sql: trace
 ---
 spring:
   config:
