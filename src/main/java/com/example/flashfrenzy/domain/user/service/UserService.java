@@ -47,9 +47,8 @@ public class UserService {
             throw new IllegalArgumentException("중복된 Email 입니다.");
         }
 
-        Basket basket = new Basket();
-        basketRepository.save(basket);
         // 사용자 등록
+        Basket basket = new Basket();
         User user = new User(username, password, UserRoleEnum.USER, email, basket);
         userRepository.save(user);
 
