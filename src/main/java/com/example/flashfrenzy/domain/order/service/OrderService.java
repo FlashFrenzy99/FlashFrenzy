@@ -36,6 +36,10 @@ public class OrderService {
                 () -> new IllegalArgumentException("해당 장바구니가 존재하지 않습니다.")
         );
 
+        if (basket.getList().isEmpty()) {
+            throw new IllegalArgumentException("장바구니에 물품이 1개 이상 존재해야 주문이 가능합니다.");
+        }
+
         User user = basket.getUser();
         List<BasketProduct> basketProductList = basket.getList();
         List<OrderProduct> orderProductList = basketProductList.stream().map(OrderProduct::new)
