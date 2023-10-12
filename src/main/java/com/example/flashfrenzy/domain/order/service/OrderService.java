@@ -15,12 +15,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j(topic = "Order API")
 public class OrderService {
 
     private final OrderRepository orderRepository;
@@ -29,6 +31,7 @@ public class OrderService {
 
     @Transactional
     public void orderBasketProducts(Long id) {
+        log.debug("장바구니 상품 주문");
         Basket basket = basketRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당 장바구니가 존재하지 않습니다.")
         );

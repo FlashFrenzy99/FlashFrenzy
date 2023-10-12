@@ -1,6 +1,10 @@
 spring:
   profiles:
-    include: secret
+    default: local
+    group:
+      "local": local, secret
+      "prod": prod, secret
+
   jpa:
     properties:
       hibernate:
@@ -15,10 +19,30 @@ spring:
       filter:
         enable: true
 
-
+logging:
+  config: classpath:logback-spring.xml
 
 server:
   error:
     include-exception: true
     include-stacktrace: always
 
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: info
+#        SQL: debug
+        type:
+          descriptor:
+            sql: trace
+---
+spring:
+  config:
+    activate:
+      on-profile: prod

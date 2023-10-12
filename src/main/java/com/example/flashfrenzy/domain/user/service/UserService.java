@@ -11,7 +11,9 @@ import com.example.flashfrenzy.domain.user.entity.UserRoleEnum;
 import com.example.flashfrenzy.domain.user.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j(topic = "User API")
 public class UserService {
 
     private final UserRepository userRepository;
@@ -28,6 +31,7 @@ public class UserService {
 
     @Transactional
     public void signup(SignupRequestDto requestDto) {
+        log.debug("회원가입");
         String username = requestDto.getUsername();
         String password = passwordEncoder.encode(requestDto.getPassword());
         // 회원 중복 확인
@@ -52,7 +56,7 @@ public class UserService {
     }
 
     public List<OrderResponseDto> getOrders(User user) {
-
+        log.debug("주문내역 확인");
         List<Order> orders = orderRepository.findAllByUser(user);
 
         return orders.stream().map(OrderResponseDto::new).toList();
