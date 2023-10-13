@@ -30,7 +30,7 @@ public class OrderService {
     private final BasketProductRepository basketProductRepository;
 
     @Transactional
-    public void orderBasketProducts(Long id) {
+    public Long orderBasketProducts(Long id) {
         log.debug("장바구니 상품 주문");
         Basket basket = basketRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당 장바구니가 존재하지 않습니다.")
@@ -53,11 +53,13 @@ public class OrderService {
             product.discountStock(orderProduct.getCount());
         }
 
-        orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
+
 
         //주문 후 장바구니 내역 삭제
         basketProductRepository.deleteAllByBasket(basket);
 
+        return order.getId();
     }
 
 }
