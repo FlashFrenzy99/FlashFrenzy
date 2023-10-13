@@ -2,12 +2,14 @@ package com.example.flashfrenzy.domain.product.entity;
 
 import com.example.flashfrenzy.global.data.dto.ItemDto;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor // test
 public class Product {
 
     @Id
@@ -41,6 +43,7 @@ public class Product {
         this.category2 = itemDto.getCategory2();
         this.stock = itemDto.getStock();
     }
+
 
     public void discountStock(Long stock) {
         if (this.stock < stock) {
