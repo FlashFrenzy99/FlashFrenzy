@@ -50,6 +50,10 @@ public class OrderService {
         for (OrderProduct orderProduct : orderProductList) {
             order.addOrderProduct(orderProduct);
             Product product = orderProduct.getProduct();
+            if (product.getStock() < orderProduct.getCount()) {
+                throw new IllegalArgumentException(
+                        "주문하려는 물품의 재고가 부족합니다. name: " + product.getTitle());
+            }
             product.discountStock(orderProduct.getCount());
         }
 
