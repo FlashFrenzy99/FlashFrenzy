@@ -1,11 +1,13 @@
 package com.example.flashfrenzy.global.data.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.json.JSONObject;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class ItemDto {
     private String title;
     private String image;
