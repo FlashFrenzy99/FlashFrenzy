@@ -8,8 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BasketProductRepository extends JpaRepository<BasketProduct, Long> {
     void deleteAllByBasket(Basket basket);
-
-    Optional<BasketProduct> findByBasket_idAndProduct_id(Long id, Long id1);
-
     Optional<BasketProduct> findByBasketAndProduct(Basket basket, Product product);
 }
