@@ -2,8 +2,10 @@ package com.example.flashfrenzy.domain.product.entity;
 
 import com.example.flashfrenzy.global.data.dto.ItemDto;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -40,6 +42,16 @@ public class Product {
         this.category1 = itemDto.getCategory1();
         this.category2 = itemDto.getCategory2();
         this.stock = itemDto.getStock();
+    }
+
+    public Product(Long id, String title, String image, Long price, String category1, String category2, Long stock) {
+        this.id = id;
+        this.title = title;
+        this.image = image;
+        this.price = price;
+        this.category1 = category1;
+        this.category2 = category2;
+        this.stock = stock;
     }
 
     public void discountStock(Long stock) {

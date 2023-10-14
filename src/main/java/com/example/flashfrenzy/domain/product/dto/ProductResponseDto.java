@@ -2,8 +2,10 @@ package com.example.flashfrenzy.domain.product.dto;
 
 import com.example.flashfrenzy.domain.product.entity.Product;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class ProductResponseDto {
 
     private Long id;
