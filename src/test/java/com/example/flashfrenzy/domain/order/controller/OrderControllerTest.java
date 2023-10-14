@@ -60,19 +60,14 @@ class OrderControllerTest {
         UserRoleEnum role = UserRoleEnum.USER;
         String email = "test@hello.com";
         User user = new User(username, password, role, email, new Basket());
-//        Basket basket = user.getBasket();
-//        basket.getList().add(new BasketProduct());
 
+        //when - then
         mvc.perform(
                         post("/api/orders/{id}", 1L)
 
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/auth/users/my-page"));
-
-        //when
-
-        //then
 
     }
 
