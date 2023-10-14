@@ -11,10 +11,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,7 +57,9 @@ public class ProductServiceTest {
     void searchProductsTest() {
         // give
         String query = "1";
-        when(productRepository.findAllByTitleContains(query)).thenReturn(productList());
+        List<Product> dummy = new ArrayList<>();
+        dummy.add(productList().get(0));        // 더미 값을 넣어주기 위해 만든 리스트
+        when(productRepository.findAllByTitleContains(query)).thenReturn(dummy);
 
         // when
         final List<ProductResponseDto> productList = productService.searchProducts(query);
@@ -73,13 +73,11 @@ public class ProductServiceTest {
     void searchProductsTestFail() {
         // give
         String query = "7";
-        when(productRepository.findAllByTitleContains(query)).thenThrow(new IllegalArgumentException(""));
-
+        when(productRepository.findAllByTitleContains(query)).thenReturn(List.of());
         // when
+        final List<ProductResponseDto> productList = productService.searchProducts(query);
         // then
-        assertThrows(IllegalArgumentException.class, () -> {
-            productService.searchProducts(query);
-        });
+        assertThat(productList.size()).isEqualTo(0);
     }
 
     @DisplayName("DB에 등록되어 있는 상품의 상세 정보를 조회한다.")
