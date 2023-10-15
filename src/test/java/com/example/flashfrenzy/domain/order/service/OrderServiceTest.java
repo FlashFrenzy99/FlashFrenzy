@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.example.flashfrenzy.domain.basket.entity.Basket;
 import com.example.flashfrenzy.domain.basket.repository.BasketRepository;
 import com.example.flashfrenzy.domain.basketProdcut.entity.BasketProduct;
+import com.example.flashfrenzy.domain.basketProdcut.repository.BasketProductRepository;
 import com.example.flashfrenzy.domain.order.entity.Order;
 import com.example.flashfrenzy.domain.order.repository.OrderRepository;
 import com.example.flashfrenzy.domain.orderProduct.entity.OrderProduct;
@@ -32,7 +33,7 @@ class OrderServiceTest {
     private UserRepository userRepository;
 
     @Autowired
-    private BasketRepository basketRepository;
+    private BasketProductRepository basketProductRepository;
 
     @Autowired
     private OrderService orderService;
@@ -75,6 +76,9 @@ class OrderServiceTest {
         basket.getList().add(basketProduct1);
         basket.getList().add(basketProduct2);
 
+        basketProductRepository.save(basketProduct1);
+        basketProductRepository.save(basketProduct2);
+
         //when
         Long orderId = orderService.orderBasketProducts(basket.getId());
         Order findOrder = orderRepository.findById(orderId).get();
@@ -111,6 +115,8 @@ class OrderServiceTest {
         basket.getList().add(basketProduct1);
         basket.getList().add(basketProduct2);
 
+        basketProductRepository.save(basketProduct1);
+        basketProductRepository.save(basketProduct2);
         //when
         Long orderId = orderService.orderBasketProducts(basket.getId());
 
@@ -133,11 +139,14 @@ class OrderServiceTest {
         Long productStock1 = product1.getStock();
         Long productStock2 = product2.getStock();
 
-        BasketProduct basketProduct1 = new BasketProduct(1000L, basket, product1);
-        BasketProduct basketProduct2 = new BasketProduct(5L, basket, product2);
+        BasketProduct basketProduct1 = new BasketProduct(productStock1+1, basket, product1);
+        BasketProduct basketProduct2 = new BasketProduct(productStock2+1, basket, product2);
 
         basket.getList().add(basketProduct1);
         basket.getList().add(basketProduct2);
+
+        basketProductRepository.save(basketProduct1);
+        basketProductRepository.save(basketProduct2);
 
         //when - then
         Assertions.assertThatThrownBy(() -> orderService.orderBasketProducts(basket.getId()))
