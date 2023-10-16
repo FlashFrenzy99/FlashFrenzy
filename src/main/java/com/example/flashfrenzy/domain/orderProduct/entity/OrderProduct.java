@@ -29,9 +29,18 @@ public class OrderProduct {
     @Column(name = "count", nullable = false)
     private Long count;  // 주문 수량
 
+    private Long price;
+
     public OrderProduct(BasketProduct basketProduct) {
         this.product = basketProduct.getProduct();
         this.count = basketProduct.getCount();
+        this.price = basketProduct.getProduct().getPrice();
+    }
+
+    public OrderProduct(BasketProduct basketProduct,int saleRate) {
+        this.product = basketProduct.getProduct();
+        this.count = basketProduct.getCount();
+        this.price = basketProduct.getProduct().getPrice() * (100 - saleRate) / 100;
     }
 
     public void addOrder(Order order) {

@@ -6,6 +6,8 @@ import com.example.flashfrenzy.domain.basket.repository.BasketRepository;
 import com.example.flashfrenzy.domain.basketProdcut.dto.BasketProductResponseDto;
 import com.example.flashfrenzy.domain.basketProdcut.entity.BasketProduct;
 import com.example.flashfrenzy.domain.basketProdcut.repository.BasketProductRepository;
+import com.example.flashfrenzy.domain.event.entity.Event;
+import com.example.flashfrenzy.domain.event.repository.EventRepository;
 import com.example.flashfrenzy.domain.product.entity.Product;
 import com.example.flashfrenzy.domain.product.repository.ProductRepository;
 import com.example.flashfrenzy.domain.user.entity.User;
@@ -25,16 +27,32 @@ public class BasketService {
     private final BasketRepository basketRepository;
     private final BasketProductRepository basketProductRepository;
     private final ProductRepository productRepository;
+    private final EventRepository eventRepository;
 
     public List<BasketProductResponseDto> getBasket(User user) {
         log.debug("장바구니 조회");
         Basket basket = basketRepository.findById(user.getBasket().getId()).orElseThrow(() ->
                 new IllegalArgumentException("해당 장바구니를 찾을 수 없습니다."));
 
-        List<BasketProduct> list = basket.getList();
+        List<BasketProduct> list = basketProductRepository.findByBasketId(basket.getId());
+
+        for (BasketProduct basketProduct : list) {
+            Optional<Event> eventOptional = eventRepository.findById(basketProduct.getProduct().getId());
+            if (eventOptional.isPresent()) {
+
+            }
+        }
 
         return list.stream()
-                .map(BasketProductResponseDto::new).toList();
+                .map(basketProduct -> {
+                    Optional<Event> eventOptional = eventRepository.findById(basketProduct.getProduct().getId());
+                    if (eventOptional.isPresent()) {
+                        Event event = eventOptional.get();
+                        return new BasketProductResponseDto(basketProduct,event.getSaleRate());
+                    }else {
+                        return new BasketProductResponseDto(basketProduct);
+                    }
+                }).toList();
     }
 
     @Transactional

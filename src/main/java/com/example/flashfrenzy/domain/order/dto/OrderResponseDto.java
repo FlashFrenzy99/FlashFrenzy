@@ -13,9 +13,11 @@ public class OrderResponseDto {
 
     private Long id;
     private List<OrderProductResponseDto> orderProductList = new ArrayList<>();
+    private Long totalPrice;
 
     public OrderResponseDto(Order order) {
         this.id = order.getId();
+        this.totalPrice = order.getTotalPrice();
         this.orderProductList = order.getOrderProductList().stream().map(OrderProductResponseDto::new).toList();
     }
 }
