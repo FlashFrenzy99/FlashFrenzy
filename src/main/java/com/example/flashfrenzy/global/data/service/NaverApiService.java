@@ -36,35 +36,42 @@ public class NaverApiService {
     @Value("${naver.client-secret}")
     private String clientSecret;
 
-    public void searchItems(String query, String page) {
+    public void searchItems(String query) {
+        long start = System.currentTimeMillis();
         // 요청 URL 만들기
-        URI uri = UriComponentsBuilder
-                .fromUriString("https://openapi.naver.com")
-                .path("/v1/search/shop.json")
-                .queryParam("display", 100)
-                .queryParam("start", Integer.valueOf(page))
-                .queryParam("query", query)
-                .encode()
-                .build()
-                .toUri();
-        log.info("uri = " + uri);
+        List<Product> productList = new ArrayList<>();
+        for (int i = 1; i <= 10; i++) {
+            URI uri = UriComponentsBuilder
+                    .fromUriString("https://openapi.naver.com")
+                    .path("/v1/search/shop.json")
+                    .queryParam("display", 100)
+                    .queryParam("start", i)
+                    .queryParam("query", query)
+                    .queryParam("sort" , "date")
+                    .encode()
+                    .build()
+                    .toUri();
+            log.info("uri = " + uri);
 
-        RequestEntity<Void> requestEntity = RequestEntity
-                .get(uri)
-                .header("X-Naver-Client-Id", clientId)
-                .header("X-Naver-Client-Secret", clientSecret)
-                .build();
+            RequestEntity<Void> requestEntity = RequestEntity
+                    .get(uri)
+                    .header("X-Naver-Client-Id", clientId)
+                    .header("X-Naver-Client-Secret", clientSecret)
+                    .build();
 
-        ResponseEntity<String> responseEntity = restTemplate.exchange(requestEntity, String.class);
+            ResponseEntity<String> responseEntity = restTemplate.exchange(requestEntity, String.class);
 
-        log.info("NAVER API Status Code : " + responseEntity.getStatusCode());
+            log.info("NAVER API Status Code : " + responseEntity.getStatusCode());
 
-        List<ItemDto> itemDtoList = fromJSONtoItems(responseEntity.getBody());
+            List<ItemDto> itemDtoList = fromJSONtoItems(responseEntity.getBody());
 
-        itemDtoList.stream().forEach(itemDto -> {
-            Product product = new Product(itemDto);
-            this.productRepository.save(product);
-        });
+            itemDtoList.forEach(itemDto -> {
+                Product product = new Product(itemDto);
+                productList.add(product);
+            });
+        }
+        this.productRepository.saveAll(productList);
+        log.info("elapsed time : " + (System.currentTimeMillis() - start) + "ms");
     }
 
     public List<ItemDto> fromJSONtoItems(String responseEntity) {
@@ -72,9 +79,11 @@ public class NaverApiService {
         JSONArray items  = jsonObject.getJSONArray("items");
         List<ItemDto> itemDtoList = new ArrayList<>();
 
-        for (Object item : items) {
-            ItemDto itemDto = new ItemDto((JSONObject) item);
-            itemDtoList.add(itemDto);
+        for (int j = 0; j < 1000; j++) {
+            for (Object item : items) {
+                ItemDto itemDto = new ItemDto((JSONObject) item);
+                itemDtoList.add(itemDto);
+            }
         }
 
         return itemDtoList;
