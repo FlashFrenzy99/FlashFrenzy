@@ -6,6 +6,10 @@ import com.example.flashfrenzy.domain.product.repository.ProductRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +21,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    public List<ProductResponseDto> getProducts() {
+    public Page<ProductResponseDto> getProducts(Pageable pageable) {
         log.debug("상품 조회");
         return productRepository.findAll().stream().map(ProductResponseDto::new).toList();
     }
