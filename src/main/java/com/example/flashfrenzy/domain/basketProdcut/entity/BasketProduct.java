@@ -4,6 +4,7 @@ import com.example.flashfrenzy.domain.basket.entity.Basket;
 import com.example.flashfrenzy.domain.product.entity.Product;
 import com.example.flashfrenzy.global.entity.TimeStamp;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
@@ -12,6 +13,7 @@ import org.hibernate.annotations.Where;
 @Entity
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor // test
 @Where(clause = "deleted_at IS NULL")
 @SQLDelete(sql = "UPDATE basket_product SET deleted_at = CURRENT_TIMESTAMP where basket_product_id = ?")
 public class BasketProduct extends TimeStamp{

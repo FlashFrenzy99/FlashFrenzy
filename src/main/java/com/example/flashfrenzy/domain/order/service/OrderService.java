@@ -30,11 +30,15 @@ public class OrderService {
     private final BasketProductRepository basketProductRepository;
 
     @Transactional
-    public void orderBasketProducts(Long id) {
+    public Long orderBasketProducts(Long id) {
         log.debug("장바구니 상품 주문");
         Basket basket = basketRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당 장바구니가 존재하지 않습니다.")
         );
+
+        if (basket.getList().isEmpty()) {
+            throw new IllegalArgumentException("장바구니에 물품이 1개 이상 존재해야 주문이 가능합니다.");
+        }
 
         User user = basket.getUser();
         List<BasketProduct> basketProductList = basket.getList();
@@ -46,14 +50,20 @@ public class OrderService {
         for (OrderProduct orderProduct : orderProductList) {
             order.addOrderProduct(orderProduct);
             Product product = orderProduct.getProduct();
+            if (product.getStock() < orderProduct.getCount()) {
+                throw new IllegalArgumentException(
+                        "주문하려는 물품의 재고가 부족합니다. name: " + product.getTitle());
+            }
             product.discountStock(orderProduct.getCount());
         }
 
-        orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
+
 
         //주문 후 장바구니 내역 삭제
         basketProductRepository.deleteAllByBasket(basket);
 
+        return order.getId();
     }
 
 }
