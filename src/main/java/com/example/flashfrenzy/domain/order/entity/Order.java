@@ -30,7 +30,7 @@ public class Order extends TimeStamp {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private Long totalPrice;
+    private Long totalPrice = 0L;
 
     public void addUser(User user) {
         this.user = user;
@@ -38,7 +38,7 @@ public class Order extends TimeStamp {
     }
 
     public void addOrderProduct(OrderProduct orderProduct) {
-        addTotalPrice(orderProduct.getPrice());
+        addTotalPrice(orderProduct.getPrice()*orderProduct.getCount());
         this.orderProductList.add(orderProduct);
         orderProduct.addOrder(this);
     }

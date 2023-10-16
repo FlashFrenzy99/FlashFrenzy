@@ -2,7 +2,9 @@ package com.example.flashfrenzy.domain.product.controller;
 
 import com.example.flashfrenzy.domain.product.dto.ProductResponseDto;
 import com.example.flashfrenzy.domain.product.entity.Product;
+import com.example.flashfrenzy.domain.product.repository.ProductRepository;
 import com.example.flashfrenzy.domain.product.service.ProductService;
+import com.example.flashfrenzy.global.data.dto.ItemDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
