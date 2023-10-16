@@ -5,5 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
 
+    @Query("select e.product.id from Event e join e.product")
+    List<Long> findProductIdList();
 
 }
