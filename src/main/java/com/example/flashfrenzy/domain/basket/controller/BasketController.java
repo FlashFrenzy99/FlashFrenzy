@@ -39,12 +39,16 @@ public class BasketController {
     @PostMapping("/{id}")
     //@ResponseBody
     public String addBasket(@PathVariable(value = "id") Long basketId, @ModelAttribute BasketRequestForm requestForm){
+        long startTime = System.currentTimeMillis();
         basketService.addBasket(basketId, requestForm);
+        log.info("장바구니 담기 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
         return "redirect:/api/baskets";
     }
     @DeleteMapping("/{id}")         // basketProduct_id
     public String deleteBasket(@PathVariable(value = "id") Long basketProductId){
+        long startTime = System.currentTimeMillis();
         basketService.deleteBasket(basketProductId);
+        log.info("장바구니 상품 삭제 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
         return "redirect:/api/baskets";
     }
 }

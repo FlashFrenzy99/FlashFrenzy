@@ -11,12 +11,13 @@ import com.example.flashfrenzy.domain.event.repository.EventRepository;
 import com.example.flashfrenzy.domain.product.entity.Product;
 import com.example.flashfrenzy.domain.product.repository.ProductRepository;
 import com.example.flashfrenzy.domain.user.entity.User;
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +37,6 @@ public class BasketService {
         log.debug("장바구니 조회");
         Basket basket = basketRepository.findById(user.getBasket().getId()).orElseThrow(() ->
                 new IllegalArgumentException("해당 장바구니를 찾을 수 없습니다."));
-
         List<BasketProduct> list = basketProductRepository.findByBasketId(basket.getId());
 
 

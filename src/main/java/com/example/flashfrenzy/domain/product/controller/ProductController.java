@@ -33,8 +33,10 @@ public class ProductController {
      */
     @Operation(summary = "상품 리스트 조회", description = "그렇다고")
     @GetMapping
-    public String getProducts(Model model,@PageableDefault(size = 15,sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public String getProducts(Model model,@PageableDefault(size = 15, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        long startTime = System.currentTimeMillis();
         Page<ProductResponseDto> productList = productService.getProducts(pageable);
+        log.info("상품 조회 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
         model.addAttribute("productList", productList);
         return "product-list";
     }

@@ -31,11 +31,25 @@ public class ProductService {
     public Page<ProductResponseDto> getProducts(Pageable pageable) {
         log.debug("상품 조회");
 
-        List<Product> list = productRepository.findAll();
+        /*개선 이전*/
+//        List<Product> list = productRepository.findTop2000By();
+//        List<ProductResponseDto> productResponseDtoList = list.stream().map(product -> {
+//            Optional<Event> eventOptional = eventRepository.findById(product.getId());
+//            if (eventOptional.isPresent()) {
+//                Event event = eventOptional.get();
+//                return new ProductResponseDto(product, event.getSaleRate());
+//            } else {
+//                return new ProductResponseDto(product);
+//            }
+//        }).toList();
+
+
+        List<Long> eventIdList = eventRepository.findProductIdList();
+
+        List<Product> list = productRepository.findTop2000By();
         List<ProductResponseDto> productResponseDtoList = list.stream().map(product -> {
-            Optional<Event> eventOptional = eventRepository.findById(product.getId());
-            if (eventOptional.isPresent()) {
-                Event event = eventOptional.get();
+            if (eventIdList.contains(product.getId())) {
+                Event event = eventRepository.findById(product.getId()).orElseThrow();
                 return new ProductResponseDto(product, event.getSaleRate());
             } else {
                 return new ProductResponseDto(product);
@@ -45,14 +59,19 @@ public class ProductService {
         PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
         int start = (int) pageRequest.getOffset();
         int end = Math.min((start + pageRequest.getPageSize()), productResponseDtoList.size());
-        
-        return new PageImpl<>(productResponseDtoList.subList(start,end), pageRequest, productResponseDtoList.size());
 
+        return new PageImpl<>(productResponseDtoList.subList(start,end), pageRequest, productResponseDtoList.size());
     }
 
     public Page<ProductResponseDto> searchProducts(String query, Pageable pageable) {
         log.debug("상품 검색");
-        return productRepository.findAllByTitleContains(query).stream().map(ProductResponseDto::new).toList();
+        List<ProductResponseDto> productResponseDtoList = productRepository.findAllByTitleContains(query).stream().map(ProductResponseDto::new).toList();
+
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), productResponseDtoList.size());
+
+        return new PageImpl<>(productResponseDtoList.subList(start,end), pageRequest, productResponseDtoList.size());
     }
 
 
