@@ -22,7 +22,6 @@ public class HomeController {
     public String  home(Model model,@PageableDefault(size = 15) Pageable pageable) {
         Page<ProductResponseDto> productList = productService.getProducts(pageable);
         model.addAttribute("productList", productList);
-
         return "product-list";
     }
 }

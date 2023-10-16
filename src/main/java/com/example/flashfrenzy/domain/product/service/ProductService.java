@@ -50,7 +50,7 @@ public class ProductService {
 
     }
 
-    public List<ProductResponseDto> searchProducts(String query) {
+    public Page<ProductResponseDto> searchProducts(String query, Pageable pageable) {
         log.debug("상품 검색");
         return productRepository.findAllByTitleContains(query).stream().map(ProductResponseDto::new).toList();
     }

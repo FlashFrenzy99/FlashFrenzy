@@ -29,7 +29,9 @@ public class BasketController {
 
     @GetMapping
     public String getBasket(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model){
+        long startTime = System.currentTimeMillis();
         List<BasketProductResponseDto> basketProducts = basketService.getBasket(userDetails.getUser());
+        log.info("장바구니 조회 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
         model.addAttribute("basketProducts", basketProducts);
         return "basket";
     }

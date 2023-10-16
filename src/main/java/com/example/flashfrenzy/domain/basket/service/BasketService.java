@@ -29,6 +29,9 @@ public class BasketService {
     private final ProductRepository productRepository;
     private final EventRepository eventRepository;
 
+    /**
+     * 최적화 완료
+     */
     public List<BasketProductResponseDto> getBasket(User user) {
         log.debug("장바구니 조회");
         Basket basket = basketRepository.findById(user.getBasket().getId()).orElseThrow(() ->
@@ -36,18 +39,13 @@ public class BasketService {
 
         List<BasketProduct> list = basketProductRepository.findByBasketId(basket.getId());
 
-        for (BasketProduct basketProduct : list) {
-            Optional<Event> eventOptional = eventRepository.findById(basketProduct.getProduct().getId());
-            if (eventOptional.isPresent()) {
 
-            }
-        }
+        List<Long> eventIdList = eventRepository.findProductIdList();
 
         return list.stream()
                 .map(basketProduct -> {
-                    Optional<Event> eventOptional = eventRepository.findById(basketProduct.getProduct().getId());
-                    if (eventOptional.isPresent()) {
-                        Event event = eventOptional.get();
+                    if (eventIdList.contains(basketProduct.getProduct().getId())) {
+                        Event event = eventRepository.findById(basketProduct.getProduct().getId()).orElseThrow();
                         return new BasketProductResponseDto(basketProduct,event.getSaleRate());
                     }else {
                         return new BasketProductResponseDto(basketProduct);

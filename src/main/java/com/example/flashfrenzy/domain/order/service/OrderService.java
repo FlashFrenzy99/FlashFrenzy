@@ -47,10 +47,12 @@ public class OrderService {
         }
 
         User user = basket.getUser();
+
+        List<Long> eventIdList = eventRepository.findProductIdList();
+
         List<OrderProduct> orderProductList = basketProductList.stream().map(basketProduct -> {
-                Optional<Event> eventOptional = eventRepository.findById(basketProduct.getProduct().getId());
-            if (eventOptional.isPresent()) {
-                Event event = eventOptional.get();
+            if (eventIdList.contains(basketProduct.getProduct().getId())) {
+                Event event = eventRepository.findById(basketProduct.getProduct().getId()).orElseThrow();
                 return new OrderProduct(basketProduct, event.getSaleRate());
             } else {
                 return new OrderProduct(basketProduct);

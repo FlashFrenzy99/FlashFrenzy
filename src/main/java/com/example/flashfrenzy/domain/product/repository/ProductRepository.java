@@ -14,5 +14,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findAllByTitleContains(String query);
 //    Page<Product> findAllByTitleContains(String query, Pageable);
 
-    Page<Product> findTop100By(Pageable pageable);
+
+
+    List<Product> findTop2000By();
+
+    List<Product> findTop8000000By();
+
 }
