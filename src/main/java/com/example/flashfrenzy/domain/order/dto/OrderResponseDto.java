@@ -17,6 +17,7 @@ public class OrderResponseDto {
 
     public OrderResponseDto(Order order) {
         this.id = order.getId();
+        this.totalPrice = order.getTotalPrice();
         this.orderProductList = order.getOrderProductList().stream().map(OrderProductResponseDto::new).toList();
     }
 }

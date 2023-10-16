@@ -26,4 +26,15 @@ BasketProductResponseDto {
         this.category2 = basketProduct.getProduct().getCategory2();
         this.stock = basketProduct.getCount();
     }
+
+    public BasketProductResponseDto(BasketProduct basketProduct, int saleRate) {
+        this.BasketProductId = basketProduct.getId();
+        this.title = basketProduct.getProduct().getTitle();
+        this.image = basketProduct.getProduct().getImage();
+        this.price = basketProduct.getProduct().getPrice() * (100 - saleRate) / 100;
+        this.category1 = basketProduct.getProduct().getCategory1();
+        this.category2 = basketProduct.getProduct().getCategory2();
+        this.stock = basketProduct.getCount();
+
+    }
 }
