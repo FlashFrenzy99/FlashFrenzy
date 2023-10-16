@@ -16,7 +16,7 @@ public class NaverApiController {
     private final NaverApiService naverApiService;
 
     @GetMapping("/search")
-    public void searchItems(@RequestParam String query, @RequestParam String page)  {
-        naverApiService.searchItems(query, page);
+    public void searchItems(@RequestParam String query)  {
+        naverApiService.searchItems(query);
     }
 }
