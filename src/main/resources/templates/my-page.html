@@ -19,9 +19,11 @@
           <li th:each="product : ${order.orderProductList}">
             <span th:text="${product.title}"></span> <!-- OrderProductResponseDto의 필드 사용 -->
             <span th:text="${product.count}"></span>
+            <span th:text="${product.price}"></span>
           </li>
         </ul>
       </td>
+      <td th:text="${order.totalPrice}"></td>
     </tr>
     </tbody>
   </table>

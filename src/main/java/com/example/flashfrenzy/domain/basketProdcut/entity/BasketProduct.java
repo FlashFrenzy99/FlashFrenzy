@@ -34,6 +34,7 @@ public class BasketProduct extends TimeStamp{
     @JoinColumn(name = "product_id")
     private Product product;
 
+
     public BasketProduct(Long count, Basket basket, Product product) {
         this.count = count;
         this.basket = basket;

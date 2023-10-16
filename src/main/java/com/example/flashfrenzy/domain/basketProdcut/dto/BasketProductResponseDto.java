@@ -4,7 +4,8 @@ import com.example.flashfrenzy.domain.basketProdcut.entity.BasketProduct;
 import lombok.Getter;
 
 @Getter
-public class BasketProductResponseDto {
+public class
+BasketProductResponseDto {
 
     private Long BasketProductId;
 
@@ -14,7 +15,6 @@ public class BasketProductResponseDto {
     private String category1;
     private String category2;
     private Long stock;
-
 
 
     public BasketProductResponseDto(BasketProduct basketProduct){

@@ -30,13 +30,20 @@ public class Order extends TimeStamp {
     @JoinColumn(name = "user_id")
     private User user;
 
+    private Long totalPrice;
+
     public void addUser(User user) {
         this.user = user;
         user.getOrderList().add(this);
     }
 
     public void addOrderProduct(OrderProduct orderProduct) {
+        addTotalPrice(orderProduct.getPrice());
         this.orderProductList.add(orderProduct);
         orderProduct.addOrder(this);
+    }
+
+    private void addTotalPrice(Long price) {
+        this.totalPrice += price;
     }
 }

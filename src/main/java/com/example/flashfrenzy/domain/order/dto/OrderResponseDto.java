@@ -13,6 +13,7 @@ public class OrderResponseDto {
 
     private Long id;
     private List<OrderProductResponseDto> orderProductList = new ArrayList<>();
+    private Long totalPrice;
 
     public OrderResponseDto(Order order) {
         this.id = order.getId();
