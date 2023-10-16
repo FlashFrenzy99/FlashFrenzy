@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Event {
 
     @Id
@@ -30,6 +31,8 @@ public class Event {
     @JoinColumn(name = "product_id")
     private Product product;
 
-
-
+    public Event(int saleRate, Product product) {
+        this.saleRate = saleRate;
+        this.product = product;
+    }
 }

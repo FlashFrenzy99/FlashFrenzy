@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class EventController {
 
     //이벤트 발생
-    @PostMapping
-    public void createEvent() {
-
+    @PostMapping("/api/events")
+    public void createEvent(@RequestBody EventCreateRequestDto request) {
+        eventService.createEvent(request);
     }
 }
