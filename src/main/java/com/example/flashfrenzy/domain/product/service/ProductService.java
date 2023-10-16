@@ -6,6 +6,11 @@ import com.example.flashfrenzy.domain.product.repository.ProductRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.querydsl.QPageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,14 +22,25 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    public List<ProductResponseDto> getProducts() {
+    public Page<ProductResponseDto> getProducts(Pageable pageable) {
         log.debug("상품 조회");
-        return productRepository.findAll().stream().map(ProductResponseDto::new).toList();
+        List<ProductResponseDto> productResponseDtoList =  productRepository.findAll().stream().map(ProductResponseDto::new).toList();
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), productResponseDtoList.size());
+        return new PageImpl<>(productResponseDtoList.subList(start,end), pageRequest, productResponseDtoList.size());
+//        return productRepository.findAll().stream().map(ProductResponseDto::new).toList();
     }
 
-    public List<ProductResponseDto> searchProducts(String query) {
+    public Page<ProductResponseDto> searchProducts(String query, Pageable pageable) {
         log.debug("상품 검색");
-        return productRepository.findAllByTitleContains(query).stream().map(ProductResponseDto::new).toList();
+        List<ProductResponseDto> productResponseDtoList = productRepository.findAllByTitleContains(query).stream().map(ProductResponseDto::new).toList();
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), productResponseDtoList.size());
+
+        //return productRepository.findAllByTitleContains(query).stream().map(ProductResponseDto::new).toList();
+        return new PageImpl<>(productResponseDtoList.subList(start,end), pageRequest, productResponseDtoList.size());
     }
 
 
