@@ -45,8 +45,11 @@ public class ProductController {
      */
     @Operation(summary = "상품 검색", description = "그렇다고")
     @GetMapping("/search")
-    public String searchProducts(Model model, @RequestParam(value = "query") String query) {
-        List<ProductResponseDto> productList = productService.searchProducts(query);
+    public String searchProducts(Model model, @RequestParam(value = "query") String query,
+                                 @PageableDefault(size = 15,sort = "product_id", direction = Sort.Direction.DESC) Pageable pageable) {
+        long startTime = System.currentTimeMillis();
+        Page<ProductResponseDto> productList = productService.searchProducts(query,pageable);
+        log.info("상품 검색 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
         model.addAttribute("productList", productList);
         return "product-list";
     }

@@ -5,7 +5,9 @@ import com.example.flashfrenzy.domain.basket.service.BasketService;
 import com.example.flashfrenzy.domain.basketProdcut.dto.BasketProductResponseDto;
 import com.example.flashfrenzy.global.security.UserDetailsImpl;
 import java.util.List;
+
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 @RequestMapping("/api/baskets")
 public class BasketController {
 
