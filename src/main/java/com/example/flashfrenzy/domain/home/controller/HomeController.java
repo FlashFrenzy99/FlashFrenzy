@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +20,7 @@ public class HomeController {
     private final ProductService productService;
 
     @GetMapping
-    public String home(Model model, @PageableDefault(size = 15, page = 1, sort = "title", direction = Sort.Direction.DESC) Pageable pageable) {
+    public String home(Model model, @PageableDefault(size = 15) Pageable pageable) {
         long startTime = System.currentTimeMillis();
         Page<ProductResponseDto> productList = productService.getProducts(pageable);
         log.info("홈화면 조회 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
