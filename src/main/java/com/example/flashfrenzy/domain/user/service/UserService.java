@@ -1,7 +1,6 @@
 package com.example.flashfrenzy.domain.user.service;
 
 import com.example.flashfrenzy.domain.basket.entity.Basket;
-import com.example.flashfrenzy.domain.basket.repository.BasketRepository;
 import com.example.flashfrenzy.domain.order.dto.OrderResponseDto;
 import com.example.flashfrenzy.domain.order.entity.Order;
 import com.example.flashfrenzy.domain.order.repository.OrderRepository;
@@ -9,14 +8,14 @@ import com.example.flashfrenzy.domain.user.dto.SignupRequestDto;
 import com.example.flashfrenzy.domain.user.entity.User;
 import com.example.flashfrenzy.domain.user.entity.UserRoleEnum;
 import com.example.flashfrenzy.domain.user.repository.UserRepository;
-import java.util.List;
-import java.util.Optional;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final BasketRepository basketRepository;
     private final PasswordEncoder passwordEncoder;
     private final OrderRepository orderRepository;
 

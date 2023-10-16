@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor // test
 public class Product {
 
     @Id
@@ -44,6 +43,15 @@ public class Product {
         this.stock = itemDto.getStock();
     }
 
+    public Product(Long id, String title, String image, Long price, String category1, String category2, Long stock) {
+        this.id = id;
+        this.title = title;
+        this.image = image;
+        this.price = price;
+        this.category1 = category1;
+        this.category2 = category2;
+        this.stock = stock;
+    }
 
     public void discountStock(Long stock) {
         if (this.stock < stock) {
