@@ -25,7 +25,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final EventRepository eventRepository;
 
-    public Page<ProductResponseDto> getProducts(Pageable pageable) {
+    public Page<ProductResponseDto> getProducts() {
         log.debug("상품 조회");
 
         /*개선 이전*/

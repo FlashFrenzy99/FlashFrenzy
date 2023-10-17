@@ -1,4 +1,4 @@
-package com.example.flashfrenzy.product.repository;
+package com.example.flashfrenzy.domain.product.repository;
 
 import com.example.flashfrenzy.domain.product.entity.Product;
 import com.example.flashfrenzy.domain.product.repository.ProductRepository;

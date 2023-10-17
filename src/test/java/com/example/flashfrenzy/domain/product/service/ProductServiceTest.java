@@ -1,5 +1,6 @@
-package com.example.flashfrenzy.product.service;
+package com.example.flashfrenzy.domain.product.service;
 
+import com.example.flashfrenzy.domain.event.repository.EventRepository;
 import com.example.flashfrenzy.domain.product.dto.ProductResponseDto;
 import com.example.flashfrenzy.domain.product.entity.Product;
 import com.example.flashfrenzy.domain.product.repository.ProductRepository;
@@ -11,6 +12,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +30,8 @@ public class ProductServiceTest {
     private ProductService productService;
     @Mock
     private ProductRepository productRepository;
+    @Mock
+    private EventRepository eventRepository;
 
     @BeforeEach
     void setup() {
@@ -45,11 +51,11 @@ public class ProductServiceTest {
     @Test
     void getProductsTest() {
         // give
-        when(productRepository.findAll()).thenReturn(productList());
+        when(productRepository.findTop2000By()).thenReturn(productList());
         // when
-        final List<ProductResponseDto> productList = productService.getProducts();
+        final Page<ProductResponseDto> productList = productService.getProducts();
         // then
-        assertThat(productList.size()).isEqualTo(5);
+        assertThat(productList.getSize()).isEqualTo(5);
     }
 
     @DisplayName("DB에 현재 등록되어 있는 상품을 목록에서 조회한다.")
@@ -60,12 +66,11 @@ public class ProductServiceTest {
         List<Product> dummy = new ArrayList<>();
         dummy.add(productList().get(0));        // 더미 값을 넣어주기 위해 만든 리스트
         when(productRepository.findAllByTitleContains(query)).thenReturn(dummy);
-
         // when
-        final List<ProductResponseDto> productList = productService.searchProducts(query);
-//
+        final Page<ProductResponseDto> productList = productService.searchProducts(query, pageable);
+
         // then
-        assertThat(productList.size()).isEqualTo(1);
+        assertThat(productList.getTotalElements()).isEqualTo(1);
     }
 
     @DisplayName("DB에 현재 등록되어 있지 않은 상품을 목록에서 조회한다.")
@@ -74,10 +79,11 @@ public class ProductServiceTest {
         // give
         String query = "7";
         when(productRepository.findAllByTitleContains(query)).thenReturn(List.of());
+
         // when
-        final List<ProductResponseDto> productList = productService.searchProducts(query);
+        final Page<ProductResponseDto> productList = productService.searchProducts(query, pageable);
         // then
-        assertThat(productList.size()).isEqualTo(0);
+        assertThat(productList.getTotalElements()).isEqualTo(0);
     }
 
     @DisplayName("DB에 등록되어 있는 상품의 상세 정보를 조회한다.")
@@ -104,4 +110,51 @@ public class ProductServiceTest {
             productService.detailsProduct(productId);
         });
     }
+
+    private final Pageable pageable =new Pageable() {
+        @Override
+        public int getPageNumber() {
+            return 0;
+        }
+
+        @Override
+        public int getPageSize() {
+            return 5;
+        }
+
+        @Override
+        public long getOffset() {
+            return 0;
+        }
+
+        @Override
+        public Sort getSort() {
+            return null;
+        }
+
+        @Override
+        public Pageable next() {
+            return null;
+        }
+
+        @Override
+        public Pageable previousOrFirst() {
+            return null;
+        }
+
+        @Override
+        public Pageable first() {
+            return null;
+        }
+
+        @Override
+        public Pageable withPage(int pageNumber) {
+            return null;
+        }
+
+        @Override
+        public boolean hasPrevious() {
+            return false;
+        }
+    };
 }
