@@ -28,7 +28,7 @@ public class EventService {
             () -> new IllegalArgumentException("해당 상품이 존재하지 않습니다.")
         );
 
-        Event event = new Event(saleRate,product);
+        Event event = new Event(product,saleRate);
         eventRepository.save(event);
     }
 }
