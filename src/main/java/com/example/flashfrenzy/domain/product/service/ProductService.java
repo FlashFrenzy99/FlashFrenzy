@@ -81,4 +81,25 @@ public class ProductService {
 
         return new ProductResponseDto(product);
     }
+
+    public Page<ProductResponseDto> categoryProduct(String cate, Pageable pageable) {
+        List<Long> eventIdList = eventRepository.findProductIdList();
+
+        List<Product> list = productRepository.findTop2000ByCategory1(cate);
+        List<ProductResponseDto> productResponseDtoList = list.stream().map(product -> {
+            if (eventIdList.contains(product.getId())) {
+                Event event = eventRepository.findById(product.getId()).orElseThrow();
+                return new ProductResponseDto(product, event.getSaleRate());
+            } else {
+                return new ProductResponseDto(product);
+            }
+        }).toList();
+
+        Pageable pageRequest = PageRequest.of(0, 15);
+
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), productResponseDtoList.size());
+
+        return new PageImpl<>(productResponseDtoList.subList(start,end), pageRequest, productResponseDtoList.size());
+    }
 }

@@ -17,4 +17,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findTop2000By();
 
     List<Product> findByIdIn(List<Long> idList);
+
+    List<Product> findTop2000ByCategory1(String cate);
 }

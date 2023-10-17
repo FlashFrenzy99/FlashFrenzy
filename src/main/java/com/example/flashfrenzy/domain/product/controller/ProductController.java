@@ -65,4 +65,12 @@ public class ProductController {
         model.addAttribute("product", product);
         return "product";
     }
+
+    @Operation(summary = "상품 카테고리별 조회", description = " ")
+    @GetMapping("/category")
+    public String categoryProduct(Model model, @RequestParam String cate,
+                                  @PageableDefault(size = 15,sort = "product_id", direction = Sort.Direction.DESC) Pageable pageable){
+        model.addAttribute("productList", productService.categoryProduct(cate, pageable));
+        return "product-list";
+    }
 }
