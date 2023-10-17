@@ -67,8 +67,10 @@ public class ProductController {
     @Operation(summary = "상품 카테고리별 조회", description = " ")
     @GetMapping("/category")
     public String categoryProduct(Model model, @RequestParam String cate,
-                                  @PageableDefault(size = 15,sort = "product_id", direction = Sort.Direction.DESC) Pageable pageable){
+                                  @PageableDefault(size = 15, sort = "id", direction = Sort.Direction.ASC) Pageable pageable){
+        long startTime = System.currentTimeMillis();
         model.addAttribute("productList", productService.categoryProduct(cate, pageable));
+        log.info("카테고리 검색 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
         return "product-list";
     }
 }
