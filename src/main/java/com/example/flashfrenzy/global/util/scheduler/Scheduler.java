@@ -73,7 +73,7 @@ public class Scheduler {
 
         List<Event> eventList = productRepository.findByIdIn(idList).stream().map(
                 product -> {
-                    int rate = 10 + (int) (Math.random() * 100 % 30);
+                    int rate = 10 + (int) (Math.random() * 7) * 5;
                     return new Event(product, rate);
                 }
         ).toList();
