@@ -17,6 +17,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findByIdIn(List<Long> idList);
 
+
+    List<Product> findTop2000ByCategory1(String cate);
+
     @Query("select p from Product p")
     Stream<Product> streamAllPaged(Pageable pageable);
 
