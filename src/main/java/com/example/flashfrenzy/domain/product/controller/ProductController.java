@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
-
 @Tag(name = "product", description = "상품 API")
 @Controller
 @RequiredArgsConstructor
@@ -33,9 +31,9 @@ public class ProductController {
      */
     @Operation(summary = "상품 리스트 조회", description = "그렇다고")
     @GetMapping
-    public String getProducts(Model model,@PageableDefault(size = 15, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public String getProducts(Model model) {
         long startTime = System.currentTimeMillis();
-        Page<ProductResponseDto> productList = productService.getProducts(pageable);
+        Page<ProductResponseDto> productList = productService.getProducts();
         log.info("상품 조회 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
         model.addAttribute("productList", productList);
         return "product-list";

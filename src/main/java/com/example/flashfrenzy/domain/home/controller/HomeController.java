@@ -20,9 +20,9 @@ public class HomeController {
     private final ProductService productService;
 
     @GetMapping
-    public String home(Model model, @PageableDefault(size = 15) Pageable pageable) {
+    public String home(Model model) {
         long startTime = System.currentTimeMillis();
-        Page<ProductResponseDto> productList = productService.getProducts(pageable);
+        Page<ProductResponseDto> productList = productService.getProducts();
         log.info("홈화면 조회 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
         model.addAttribute("productList", productList);
         return "product-list";
