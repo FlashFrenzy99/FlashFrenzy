@@ -5,16 +5,16 @@ import com.example.flashfrenzy.domain.event.repository.EventRepository;
 import com.example.flashfrenzy.domain.product.dto.ProductResponseDto;
 import com.example.flashfrenzy.domain.product.entity.Product;
 import com.example.flashfrenzy.domain.product.repository.ProductRepository;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -43,8 +43,9 @@ public class ProductService {
 
         List<Long> eventIdList = eventRepository.findProductIdList();
 
-        List<Product> list = productRepository.findTop2000By();
-        List<ProductResponseDto> productResponseDtoList = list.stream().map(product -> {
+        Stream<Product> list = productRepository.streamAllPaged(pageable);
+//        List<Product> list = productRepository.findTop2000By(pageable);
+        List<ProductResponseDto> productResponseDtoList = list.map(product -> {
             if (eventIdList.contains(product.getId())) {
                 Event event = eventRepository.findById(product.getId()).orElseThrow();
                 return new ProductResponseDto(product, event.getSaleRate());
@@ -52,24 +53,31 @@ public class ProductService {
                 return new ProductResponseDto(product);
             }
         }).toList();
+//        list.close();
 
-        Pageable pageRequest = PageRequest.of(0, 15);
+//        Pageable pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
 
-        int start = (int) pageRequest.getOffset();
-        int end = Math.min((start + pageRequest.getPageSize()), productResponseDtoList.size());
+//        int start = (int) pageRequest.getOffset();
+//        int end = Math.min((start + pageRequest.getPageSize()), productResponseDtoList.size());
 
-        return new PageImpl<>(productResponseDtoList.subList(start,end), pageRequest, productResponseDtoList.size());
+        return new PageImpl<>(productResponseDtoList);
+//        return new PageImpl<>(productResponseDtoList.subList(start,end), pageRequest, productResponseDtoList.size());
     }
 
     public Page<ProductResponseDto> searchProducts(String query, Pageable pageable) {
         log.debug("상품 검색");
-        List<ProductResponseDto> productResponseDtoList = productRepository.findAllByTitleContains(query).stream().map(ProductResponseDto::new).toList();
+//        Stream<Product> productList = productRepository.findAllByTitleContainsAndStream(query, pageable);
+//        List<ProductResponseDto> productResponseDtoList = productList.map(ProductResponseDto::new).toList();
 
-        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
-        int start = (int) pageRequest.getOffset();
-        int end = Math.min((start + pageRequest.getPageSize()), productResponseDtoList.size());
+        List<ProductResponseDto> productResponseDtoList = productRepository.findAllByCustomQueryAndStream(query, pageable).map(ProductResponseDto::new).toList();
+//        List<ProductResponseDto> productResponseDtoList = productRepository.findAllByTitleContains(query).stream().map(ProductResponseDto::new).toList();
 
-        return new PageImpl<>(productResponseDtoList.subList(start,end), pageRequest, productResponseDtoList.size());
+//        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+//        int start = (int) pageRequest.getOffset();
+//        int end = Math.min((start + pageRequest.getPageSize()), productResponseDtoList.size());
+
+//        return new PageImpl<>(productResponseDtoList.subList(start,end), pageRequest, productResponseDtoList.size());
+        return new PageImpl<>(productResponseDtoList);
     }
 
 
