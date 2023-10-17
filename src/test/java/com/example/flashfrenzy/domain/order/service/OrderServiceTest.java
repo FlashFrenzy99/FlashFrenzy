@@ -13,14 +13,22 @@ import com.example.flashfrenzy.domain.order.repository.OrderRepository;
 import com.example.flashfrenzy.domain.orderProduct.entity.OrderProduct;
 import com.example.flashfrenzy.domain.product.entity.Product;
 import com.example.flashfrenzy.domain.product.repository.ProductRepository;
+import com.example.flashfrenzy.domain.product.service.ProductService;
 import com.example.flashfrenzy.domain.user.entity.User;
 import com.example.flashfrenzy.domain.user.entity.UserRoleEnum;
 import com.example.flashfrenzy.domain.user.repository.UserRepository;
+import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +51,15 @@ class OrderServiceTest {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private RedissonClient redissonClient;
+
+    @Autowired
+    private EntityManager em;
 
     @Test
     @DisplayName("장바구니에 담은 물품이 없으면 주문을 생성할 수 없다.")
@@ -139,8 +156,8 @@ class OrderServiceTest {
         Long productStock1 = product1.getStock();
         Long productStock2 = product2.getStock();
 
-        BasketProduct basketProduct1 = new BasketProduct(productStock1+1, basket, product1);
-        BasketProduct basketProduct2 = new BasketProduct(productStock2+1, basket, product2);
+        BasketProduct basketProduct1 = new BasketProduct(productStock1 + 1, basket, product1);
+        BasketProduct basketProduct2 = new BasketProduct(productStock2 + 1, basket, product2);
 
         basket.getList().add(basketProduct1);
         basket.getList().add(basketProduct2);

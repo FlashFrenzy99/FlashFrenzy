@@ -52,6 +52,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     testImplementation 'org.springframework.security:spring-security-test'
+
+    //Redisson
+    implementation group: 'org.redisson', name: 'redisson-spring-boot-starter', version: '3.23.5'
+
 }
 
 tasks.named('test') {
