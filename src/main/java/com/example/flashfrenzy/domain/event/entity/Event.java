@@ -31,8 +31,8 @@ public class Event {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    public Event(int saleRate, Product product) {
-        this.saleRate = saleRate;
+    public Event(Product product, int saleRate) {
         this.product = product;
+        this.saleRate = saleRate;
     }
 }

@@ -1,21 +1,18 @@
 package com.example.flashfrenzy.domain.product.service;
 
-import com.example.flashfrenzy.domain.basket.repository.BasketRepository;
-import com.example.flashfrenzy.domain.basketProdcut.dto.BasketProductResponseDto;
-import com.example.flashfrenzy.domain.basketProdcut.repository.BasketProductRepository;
 import com.example.flashfrenzy.domain.event.entity.Event;
 import com.example.flashfrenzy.domain.event.repository.EventRepository;
 import com.example.flashfrenzy.domain.product.dto.ProductResponseDto;
 import com.example.flashfrenzy.domain.product.entity.Product;
 import com.example.flashfrenzy.domain.product.repository.ProductRepository;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,7 +53,8 @@ public class ProductService {
             }
         }).toList();
 
-        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+        Pageable pageRequest = PageRequest.of(0, 15);
+
         int start = (int) pageRequest.getOffset();
         int end = Math.min((start + pageRequest.getPageSize()), productResponseDtoList.size());
 
