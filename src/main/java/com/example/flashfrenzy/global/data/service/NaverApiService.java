@@ -70,7 +70,7 @@ public class NaverApiService {
                 productList.add(product);
             });
         }
-        this.productRepository.saveAll(productList);
+        this.productRepository.save(productList);
         log.info("elapsed time : " + (System.currentTimeMillis() - start) + "ms");
     }
 

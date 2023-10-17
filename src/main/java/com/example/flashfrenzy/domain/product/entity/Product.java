@@ -5,33 +5,38 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.PersistenceConstructor;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 @Entity
 @Getter
 @NoArgsConstructor
+@Document(indexName = "products")
 public class Product {
 
     @Id
-    @Column(name = "product_id")
+    //@Column(name = "product_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "title", nullable = false)
+    //@Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "image", nullable = false)
+    //@Column(name = "image", nullable = false)
     private String image;
 
-    @Column(name = "price", nullable = false)
+    //@Column(name = "price", nullable = false)
     private Long price;
 
-    @Column(name = "category1", nullable = false)
+    //@Column(name = "category1", nullable = false)
     private String category1; // 대분류  ex) 옷
 
-    @Column(name = "category2", nullable = false)
+   //@Column(name = "category2", nullable = false)
     private String category2; // 중분류  ex) 하의, 상의
 
-    @Column(name = "stock", nullable = false)
+    //@Column(name = "stock", nullable = false)
     private Long stock;
 
     public Product(ItemDto itemDto) {
@@ -43,6 +48,7 @@ public class Product {
         this.stock = itemDto.getStock();
     }
 
+    @PersistenceConstructor
     public Product(Long id, String title, String image, Long price, String category1, String category2, Long stock) {
         this.id = id;
         this.title = title;

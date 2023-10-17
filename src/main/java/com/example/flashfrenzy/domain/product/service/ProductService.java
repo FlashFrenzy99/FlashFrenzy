@@ -63,7 +63,7 @@ public class ProductService {
 
     public Page<ProductResponseDto> searchProducts(String query, Pageable pageable) {
         log.debug("상품 검색");
-        List<ProductResponseDto> productResponseDtoList = productRepository.findAllByTitleContains(query).stream().map(ProductResponseDto::new).toList();
+        List<ProductResponseDto> productResponseDtoList = productRepository.searchByTitle(query, pageable).stream().map(ProductResponseDto::new).toList();
 
         PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
         int start = (int) pageRequest.getOffset();
