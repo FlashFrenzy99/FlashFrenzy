@@ -94,7 +94,8 @@ public class ProductService {
     public Page<ProductResponseDto> categoryProduct(String cate, Pageable pageable) {
         List<Long> eventIdList = eventRepository.findProductIdList();
 
-        List<Product> list = productRepository.findTop2000ByCategory1(cate);
+//        List<Product> list = productRepository.findAllByCategory1(cate);
+        Page<Product> list = productRepository.findAllByCategory1(cate, pageable);
         List<ProductResponseDto> productResponseDtoList = list.stream().map(product -> {
             if (eventIdList.contains(product.getId())) {
                 Event event = eventRepository.findById(product.getId()).orElseThrow();
@@ -104,11 +105,12 @@ public class ProductService {
             }
         }).toList();
 
-        Pageable pageRequest = PageRequest.of(0, 15);
+//        Pageable pageRequest = PageRequest.of(0, 15);
 
-        int start = (int) pageRequest.getOffset();
-        int end = Math.min((start + pageRequest.getPageSize()), productResponseDtoList.size());
+//        int start = (int) pageRequest.getOffset();
+//        int end = Math.min((start + pageRequest.getPageSize()), productResponseDtoList.size());
 
-        return new PageImpl<>(productResponseDtoList.subList(start,end), pageRequest, productResponseDtoList.size());
+//        return new PageImpl<>(productResponseDtoList.subList(start,end), pageRequest, productResponseDtoList.size());
+        return new PageImpl<>(productResponseDtoList, pageable, list.getTotalElements());
     }
 }
