@@ -12,19 +12,26 @@ import com.example.flashfrenzy.domain.order.repository.OrderRepository;
 import com.example.flashfrenzy.domain.orderProduct.entity.OrderProduct;
 import com.example.flashfrenzy.domain.product.entity.Product;
 import com.example.flashfrenzy.domain.product.repository.ProductRepository;
+import com.example.flashfrenzy.domain.product.service.ProductService;
 import com.example.flashfrenzy.domain.user.entity.User;
+import com.example.flashfrenzy.global.redis.RedisRepository;
+import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.Redisson;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+//@Transactional(readOnly = true)
 @Slf4j(topic = "Order API")
 public class OrderService {
 
@@ -32,7 +39,10 @@ public class OrderService {
     private final BasketRepository basketRepository;
     private final BasketProductRepository basketProductRepository;
     private final EventRepository eventRepository;
-
+    private final RedissonClient redissonClient;
+    private final ProductRepository productRepository;
+    private final ProductService productService;
+    
     @Transactional
     public Long orderBasketProducts(Long id) {
         log.debug("장바구니 상품 주문");
@@ -42,7 +52,7 @@ public class OrderService {
 
         List<BasketProduct> basketProductList = basketProductRepository.findByBasketId(id);
 
-        if (basket.getList().isEmpty()) {
+        if (basketProductList.isEmpty()) {
             throw new IllegalArgumentException("장바구니에 물품이 1개 이상 존재해야 주문이 가능합니다.");
         }
 
@@ -52,31 +62,38 @@ public class OrderService {
 
         List<OrderProduct> orderProductList = basketProductList.stream().map(basketProduct -> {
             if (eventIdList.contains(basketProduct.getProduct().getId())) {
-                Event event = eventRepository.findById(basketProduct.getProduct().getId()).orElseThrow();
+                Event event = eventRepository.findById(basketProduct.getProduct().getId())
+                        .orElseThrow();
                 return new OrderProduct(basketProduct, event.getSaleRate());
             } else {
                 return new OrderProduct(basketProduct);
             }
-            }).toList();
+        }).toList();
 
         Order order = new Order();
-        order.addUser(user);
+        order.addUser(user); // 여기 내부 수정했었음
+
         for (OrderProduct orderProduct : orderProductList) {
             order.addOrderProduct(orderProduct);
             Product product = orderProduct.getProduct();
+
             if (product.getStock() < orderProduct.getCount()) {
                 throw new IllegalArgumentException(
                         "주문하려는 물품의 재고가 부족합니다. name: " + product.getTitle());
             }
             product.discountStock(orderProduct.getCount());
+
+//            productService.discountStock(product.getId(), orderProduct.getCount());
         }
 
         Order savedOrder = orderRepository.save(order);
 
         //주문 후 장바구니 내역 삭제
-        basketProductRepository.deleteAllByBasket(basket);
+//        basketProductRepository.deleteAllByBasket(basket);
 
         return savedOrder.getId();
+
+
     }
 
 }
