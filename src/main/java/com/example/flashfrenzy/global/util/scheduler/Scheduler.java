@@ -30,7 +30,7 @@ public class Scheduler {
     private final RedisRepository redisRepository;
 
     // 초, 분, 시, 일, 주, 월 순서
-    @Scheduled(cron = "*/30 * * * * *") // 매일 자정
+    @Scheduled(cron = "0 0 0 * * *") // 매일 자정
     @Transactional
     public void putStock() {
         List<Product> products = orderProductRepository.findAllWithProduct().stream().map(
