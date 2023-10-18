@@ -1,6 +1,7 @@
 package com.example.flashfrenzy.domain.order.controller;
 
 import com.example.flashfrenzy.domain.order.service.OrderService;
+import com.example.flashfrenzy.domain.order.service.OrderServiceFacade;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,12 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 public class OrderController {
 
-    private final OrderService orderService;
-    private final RedissonClient redissonClient;
+    private final OrderServiceFacade orderServiceFacade;
     @PostMapping("/{id}")
     public String orderBasketProducts(@PathVariable(value = "id") Long basketId) {
         long startTime = System.currentTimeMillis();
-        orderService.orderBasketProducts(basketId);
+        orderServiceFacade.orderBasketProductsFacade(basketId);
         log.info("장바구니 주문 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
 //        장바구니 id 로 userid 받아오기
         return "redirect:/auth/users/my-page";
