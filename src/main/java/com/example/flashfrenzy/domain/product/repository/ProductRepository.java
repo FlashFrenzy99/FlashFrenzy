@@ -8,8 +8,11 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.stream.Stream;
+
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.repository.query.Param;
 
+@EnableJpaRepositories
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findAllByTitleContains(String query);
@@ -31,4 +34,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT p FROM Product p WHERE p.title LIKE %:query%")
     Stream<Product> findAllByCustomQueryAndStream(String query, Pageable pageable);
+
+
+    List<Product> findTop5000000O0By();
+
+    Iterable<Product> findTop2000By();
 }

@@ -1,12 +1,8 @@
 package com.example.flashfrenzy.domain.order.controller;
 
-import com.example.flashfrenzy.domain.order.service.OrderService;
 import com.example.flashfrenzy.domain.order.service.OrderServiceFacade;
-import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.api.RLock;
-import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;

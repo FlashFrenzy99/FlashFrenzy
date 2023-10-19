@@ -5,13 +5,16 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.elasticsearch.annotations.Document;
+
+import java.lang.annotation.Documented;
 
 @Entity
 @Getter
 @NoArgsConstructor
 @Table(name = "product", indexes = @Index(name = "idx_category1", columnList = "category1"))
+@Document(indexName = "product")
 public class Product {
-
     @Id
     @Column(name = "product_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,6 +1,8 @@
 package com.example.flashfrenzy.domain.product.controller;
 
 import com.example.flashfrenzy.domain.product.dto.ProductResponseDto;
+import com.example.flashfrenzy.domain.product.repository.ProductRepository;
+import com.example.flashfrenzy.domain.product.repository.ProductSearchRepository;
 import com.example.flashfrenzy.domain.product.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ProductController {
 
     private final ProductService productService;
-
     /**
      * 상품 리스트 조회
      */
