@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @Component
@@ -21,12 +22,12 @@ public class CustomProductSearchRepositoryImpl implements CustomProductSearchRep
     private final ElasticsearchOperations elasticsearchOperations;
 
     @Override
-    public List<Product> searchByTitle(String title, Pageable pageable) {
+    public Stream<Product> searchByTitle(String title, Pageable pageable) {
         Criteria criteria = Criteria.where("product.title").contains(title);
         Query query = new CriteriaQuery(criteria).setPageable(pageable);
         SearchHits<Product> search = elasticsearchOperations.search(query, Product.class);
-        return search.stream()
-                .map(SearchHit::getContent)
-                .collect(Collectors.toList());
+        return search
+                .map(SearchHit::getContent).stream();
+                //.collect(Collectors.toList());
     }
 }

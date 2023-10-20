@@ -2,12 +2,10 @@ package com.example.flashfrenzy.domain.product.entity;
 
 import com.example.flashfrenzy.global.data.dto.ItemDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.elasticsearch.annotations.Document;
-
-import java.lang.annotation.Documented;
+import org.springframework.data.elasticsearch.annotations.Field;
 
 @Entity
 @Getter
@@ -18,6 +16,8 @@ public class Product {
     @Id
     @Column(name = "product_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Field(name = "product_id")
+    @org.springframework.data.annotation.Id
     private Long id;
 
     @Column(name = "title", nullable = false)
