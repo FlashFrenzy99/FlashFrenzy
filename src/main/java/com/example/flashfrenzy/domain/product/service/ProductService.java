@@ -73,12 +73,13 @@ public class ProductService {
 //        List<ProductResponseDto> productResponseDtoList = productList.map(ProductResponseDto::new).toList();
         long startTime = System.currentTimeMillis();
 
-        List<ProductResponseDto> productResponseDtoList = productRepository.findAllByCustomQueryAndStream(query, pageable).map(ProductResponseDto::new).toList();
-        log.info("기존 서치 elapsed time : " + (System.currentTimeMillis() - startTime) + "ms.");
+//        List<ProductResponseDto> productResponseDtoList = productRepository.findAllByCustomQueryAndStream(query, pageable).map(ProductResponseDto::new).toList();
+//        System.out.println("productResponseDtoList.size : "+ productResponseDtoList.size());
+//        log.info("기존 서치 elapsed time : " + (System.currentTimeMillis() - startTime) + "ms.");
 
-       // startTime = System.currentTimeMillis();
-        //List<ProductResponseDto> productResponseDtoList2 = productSearchRepository.searchByTitle(query, pageable).map(ProductResponseDto::new).toList();
-        //log.info("엘라스틱 서치 elapsed time : " + (System.currentTimeMillis() - startTime) + "ms.");
+        startTime = System.currentTimeMillis();
+        Page<ProductResponseDto> productResponseDtoList2 = productSearchRepository.searchByTitle(query, pageable).map(ProductResponseDto::new);
+        log.info("엘라스틱 서치 elapsed time : " + (System.currentTimeMillis() - startTime) + "ms.");
 
 //        List<ProductResponseDto> productResponseDtoList = productRepository.findAllByTitleContains(query).stream().map(ProductResponseDto::new).toList();
 
@@ -87,7 +88,8 @@ public class ProductService {
 //        int end = Math.min((start + pageRequest.getPageSize()), productResponseDtoList.size());
 
 //        return new PageImpl<>(productResponseDtoList.subList(start,end), pageRequest, productResponseDtoList.size());
-        return new PageImpl<>(productResponseDtoList);
+        //return new PageImpl<>(productResponseDtoList2);
+        return productResponseDtoList2;
     }
 
 

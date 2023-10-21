@@ -22,11 +22,11 @@ public class CustomProductSearchRepositoryImpl implements CustomProductSearchRep
     private final ElasticsearchOperations elasticsearchOperations;
 
     @Override
-    public Stream<Product> searchByTitle(String title, Pageable pageable) {
+    public Page<Product> searchByTitle(String title, Pageable pageable) {
         Criteria criteria = Criteria.where("product.title").contains(title);
         Query query = new CriteriaQuery(criteria).setPageable(pageable);
         SearchHits<Product> search = elasticsearchOperations.search(query, Product.class);
-        return search
+        return (Page<Product>) search
                 .map(SearchHit::getContent).stream();
                 //.collect(Collectors.toList());
     }

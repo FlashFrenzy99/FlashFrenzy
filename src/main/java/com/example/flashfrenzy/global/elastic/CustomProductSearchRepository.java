@@ -8,5 +8,5 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public interface CustomProductSearchRepository {
-    Stream<Product> searchByTitle(String title, Pageable pageable);
+    Page<Product> searchByTitle(String title, Pageable pageable);
 }
