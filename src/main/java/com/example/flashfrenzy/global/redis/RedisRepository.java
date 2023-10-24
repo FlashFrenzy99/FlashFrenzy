@@ -2,6 +2,7 @@ package com.example.flashfrenzy.global.redis;
 
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Repository;
@@ -22,6 +23,17 @@ public class RedisRepository {
         valueOperations.set(key, value);
     }
 
+    public void saveHash(String key, String field, String value) {
+        HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
+        hashOperations.put(key, field, value);
+
+    }
+
+    public void saveHash(String key, String field, Integer value) {
+        HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
+        hashOperations.put(key, field, String.valueOf(value));
+    }
+
     /**
      * 키 벨류 조회 메소드
      * @param key 조회하려는 key 값
@@ -31,6 +43,12 @@ public class RedisRepository {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
         return valueOperations.get(key);
     }
+
+    public String getHashFieldValue(String key, String field) {
+        HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
+        return hashOperations.get(key, field).toString();
+    }
+
 
     /**
      * 만료시간 지정 메소드

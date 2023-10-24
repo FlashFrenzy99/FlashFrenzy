@@ -45,7 +45,9 @@ public class BasketService {
         return list.stream()
                 .map(basketProduct -> {
                     if (eventIdList.contains(basketProduct.getProduct().getId())) {
-                        Event event = eventRepository.findById(basketProduct.getProduct().getId()).orElseThrow();
+                        Event event = eventRepository.findByProductId(basketProduct.getProduct().getId()).orElseThrow(
+                                () -> new IllegalArgumentException("해당 이벤트 상품이 없습니다.")
+                        );
                         return new BasketProductResponseDto(basketProduct,event.getSaleRate());
                     }else {
                         return new BasketProductResponseDto(basketProduct);

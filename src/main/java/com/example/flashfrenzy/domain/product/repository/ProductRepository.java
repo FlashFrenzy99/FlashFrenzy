@@ -30,5 +30,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Stream<Product> streamAllPaged(Pageable pageable);
 
     @Query("SELECT p FROM Product p WHERE p.title LIKE %:query%")
-    Stream<Product> findAllByCustomQueryAndStream(String query, Pageable pageable);
+    Stream<Product> findAllByCustomQueryAndStream(@Param("query") String query, Pageable pageable);
+
 }
