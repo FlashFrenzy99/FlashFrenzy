@@ -41,4 +41,14 @@ public class ProductResponseDto {
         this.category2 = product.getCategory2();
         this.stock = product.getStock();
     }
+
+    public ProductResponseDto(Product product, Long price, Long stock) {
+        this.id = product.getId();
+        this.title = product.getTitle();
+        this.image = product.getImage();
+        this.price = price;
+        this.category1 = product.getCategory1();
+        this.category2 = product.getCategory2();
+        this.stock = stock;
+    }
 }
