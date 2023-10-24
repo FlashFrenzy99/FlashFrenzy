@@ -16,6 +16,17 @@ repositories {
 }
 
 dependencies {
+    //Elastic search
+    runtimeOnly 'com.h2database:h2'
+    implementation 'org.springframework.data:spring-data-elasticsearch:4.2.2'
+
+    //implementation 'org.springframework.data:spring-data-elasticsearch'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    //implementation 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.17.11'
+
+//Redisson
+    implementation group: 'org.redisson', name: 'redisson-spring-boot-starter', version: '3.23.5'
+
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 
 

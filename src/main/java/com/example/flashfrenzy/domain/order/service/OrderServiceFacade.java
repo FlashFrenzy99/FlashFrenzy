@@ -1,11 +1,5 @@
 package com.example.flashfrenzy.domain.order.service;
 
-import com.example.flashfrenzy.domain.basket.repository.BasketRepository;
-import com.example.flashfrenzy.domain.basketProdcut.repository.BasketProductRepository;
-import com.example.flashfrenzy.domain.event.repository.EventRepository;
-import com.example.flashfrenzy.domain.order.repository.OrderRepository;
-import com.example.flashfrenzy.domain.product.repository.ProductRepository;
-import com.example.flashfrenzy.domain.product.service.ProductService;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

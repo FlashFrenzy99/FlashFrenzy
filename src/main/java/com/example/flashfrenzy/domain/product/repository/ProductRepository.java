@@ -8,8 +8,11 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.stream.Stream;
+
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.repository.query.Param;
 
+@EnableJpaRepositories
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findAllByTitleContains(String query);

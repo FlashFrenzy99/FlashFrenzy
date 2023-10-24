@@ -6,6 +6,7 @@ import com.example.flashfrenzy.domain.product.dto.ProductRankDto;
 import com.example.flashfrenzy.domain.product.dto.ProductResponseDto;
 import com.example.flashfrenzy.domain.product.entity.Product;
 import com.example.flashfrenzy.domain.product.repository.ProductRepository;
+import com.example.flashfrenzy.domain.product.repository.ProductSearchRepository;
 import com.example.flashfrenzy.global.redis.RedisRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,6 +31,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final EventRepository eventRepository;
+    private final ProductSearchRepository productSearchRepository;
     private final RedisRepository redisRepository;
     private final ObjectMapper objectMapper;
 
@@ -76,16 +78,21 @@ public class ProductService {
         log.debug("상품 검색");
 //        Stream<Product> productList = productRepository.findAllByTitleContainsAndStream(query, pageable);
 //        List<ProductResponseDto> productResponseDtoList = productList.map(ProductResponseDto::new).toList();
+        long startTime = System.currentTimeMillis();
 
-        List<ProductResponseDto> productResponseDtoList = productRepository.findAllByCustomQueryAndStream(query, pageable).map(ProductResponseDto::new).toList();
-//        List<ProductResponseDto> productResponseDtoList = productRepository.findAllByTitleContains(query).stream().map(ProductResponseDto::new).toList();
+//        List<ProductResponseDto> productResponseDtoList = productRepository.findAllByCustomQueryAndStream(query, pageable).map(ProductResponseDto::new).toList();
+//        System.out.println("productResponseDtoList.size : "+ productResponseDtoList.size());
+//        log.info("기존 서치 elapsed time : " + (System.currentTimeMillis() - startTime) + "ms.");
 
-//        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
-//        int start = (int) pageRequest.getOffset();
-//        int end = Math.min((start + pageRequest.getPageSize()), productResponseDtoList.size());
+
+        startTime = System.currentTimeMillis();
+        Page<ProductResponseDto> productResponseDtoList2 = productSearchRepository.searchByTitle(query, pageable).map(ProductResponseDto::new);
+        log.info("엘라스틱 서치 elapsed time : " + (System.currentTimeMillis() - startTime) + "ms.");
+
 
 //        return new PageImpl<>(productResponseDtoList.subList(start,end), pageRequest, productResponseDtoList.size());
-        return new PageImpl<>(productResponseDtoList);
+        //return new PageImpl<>(productResponseDtoList2);
+        return productResponseDtoList2;
     }
 
 
