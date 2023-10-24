@@ -15,7 +15,7 @@ public class OrderServiceFacade {
     private final OrderService orderService;
 
 
-    public Long orderBasketProductsFacade(Long id) {
+    public void orderBasketProductsFacade(Long id) {
 
         Long orderId;
 
@@ -30,7 +30,7 @@ public class OrderServiceFacade {
                 throw new InterruptedException("주문 요청이 많아 주문에 실패하였습니다.");
             }
 
-            orderId = orderService.orderBasketProducts(id);
+            orderService.orderBasketProducts(id);
 
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
@@ -38,7 +38,6 @@ public class OrderServiceFacade {
             lock.unlock();
 
         }
-        return orderId;
     }
 
 }

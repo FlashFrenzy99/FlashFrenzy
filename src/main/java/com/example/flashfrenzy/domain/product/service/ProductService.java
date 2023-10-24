@@ -2,10 +2,15 @@ package com.example.flashfrenzy.domain.product.service;
 
 import com.example.flashfrenzy.domain.event.entity.Event;
 import com.example.flashfrenzy.domain.event.repository.EventRepository;
+import com.example.flashfrenzy.domain.product.dto.ProductRankDto;
 import com.example.flashfrenzy.domain.product.dto.ProductResponseDto;
 import com.example.flashfrenzy.domain.product.entity.Product;
 import com.example.flashfrenzy.domain.product.repository.ProductRepository;
 import com.example.flashfrenzy.domain.product.repository.ProductSearchRepository;
+import com.example.flashfrenzy.global.redis.RedisRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -27,6 +32,8 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final EventRepository eventRepository;
     private final ProductSearchRepository productSearchRepository;
+    private final RedisRepository redisRepository;
+    private final ObjectMapper objectMapper;
 
     public Page<ProductResponseDto> getProducts(Pageable pageable) {
         log.debug("상품 조회");
@@ -77,15 +84,11 @@ public class ProductService {
 //        System.out.println("productResponseDtoList.size : "+ productResponseDtoList.size());
 //        log.info("기존 서치 elapsed time : " + (System.currentTimeMillis() - startTime) + "ms.");
 
+
         startTime = System.currentTimeMillis();
         Page<ProductResponseDto> productResponseDtoList2 = productSearchRepository.searchByTitle(query, pageable).map(ProductResponseDto::new);
         log.info("엘라스틱 서치 elapsed time : " + (System.currentTimeMillis() - startTime) + "ms.");
 
-//        List<ProductResponseDto> productResponseDtoList = productRepository.findAllByTitleContains(query).stream().map(ProductResponseDto::new).toList();
-
-//        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
-//        int start = (int) pageRequest.getOffset();
-//        int end = Math.min((start + pageRequest.getPageSize()), productResponseDtoList.size());
 
 //        return new PageImpl<>(productResponseDtoList.subList(start,end), pageRequest, productResponseDtoList.size());
         //return new PageImpl<>(productResponseDtoList2);
@@ -125,4 +128,23 @@ public class ProductService {
         return new PageImpl<>(productResponseDtoList, pageable, list.getTotalElements());
     }
 
+    public List<ProductRankDto> getProductRank() {
+
+        List<ProductRankDto> productRankList = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            String value = redisRepository.getValue("product:rank" + i);
+            if (value != null) {
+                try {
+                    ProductRankDto productRankDto = objectMapper.readValue(value,
+                            ProductRankDto.class);
+                    productRankList.add(productRankDto);
+                } catch (JsonProcessingException e) {
+                    log.error("상품 랭킹 변환 과정에서 에러가 발생하였습니다.");
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        return productRankList;
+
+    }
 }

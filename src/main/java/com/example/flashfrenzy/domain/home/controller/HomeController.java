@@ -1,7 +1,9 @@
 package com.example.flashfrenzy.domain.home.controller;
 
+import com.example.flashfrenzy.domain.product.dto.ProductRankDto;
 import com.example.flashfrenzy.domain.product.dto.ProductResponseDto;
 import com.example.flashfrenzy.domain.product.service.ProductService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -21,9 +23,12 @@ public class HomeController {
     @GetMapping
     public String home(Model model, @PageableDefault(size = 15, sort = "id", direction = Direction.ASC) Pageable pageable) {
         long startTime = System.currentTimeMillis();
+        List<ProductRankDto> productRankList = productService.getProductRank();
         Page<ProductResponseDto> productList = productService.getProducts(pageable);
         log.info("홈화면 조회 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
+
         model.addAttribute("productList", productList);
+        model.addAttribute("productRankList", productRankList);
         return "product-list";
     }
 }
