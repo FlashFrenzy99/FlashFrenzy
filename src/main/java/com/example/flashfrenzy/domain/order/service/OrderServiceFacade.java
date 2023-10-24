@@ -1,11 +1,5 @@
 package com.example.flashfrenzy.domain.order.service;
 
-import com.example.flashfrenzy.domain.basket.repository.BasketRepository;
-import com.example.flashfrenzy.domain.basketProdcut.repository.BasketProductRepository;
-import com.example.flashfrenzy.domain.event.repository.EventRepository;
-import com.example.flashfrenzy.domain.order.repository.OrderRepository;
-import com.example.flashfrenzy.domain.product.repository.ProductRepository;
-import com.example.flashfrenzy.domain.product.service.ProductService;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +15,7 @@ public class OrderServiceFacade {
     private final OrderService orderService;
 
 
-    public Long orderBasketProductsFacade(Long id) {
+    public void orderBasketProductsFacade(Long id) {
 
         Long orderId;
 
@@ -36,7 +30,7 @@ public class OrderServiceFacade {
                 throw new InterruptedException("주문 요청이 많아 주문에 실패하였습니다.");
             }
 
-            orderId = orderService.orderBasketProducts(id);
+            orderService.orderBasketProducts(id);
 
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
@@ -44,7 +38,6 @@ public class OrderServiceFacade {
             lock.unlock();
 
         }
-        return orderId;
     }
 
 }

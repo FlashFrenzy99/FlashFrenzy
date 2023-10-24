@@ -13,7 +13,6 @@ public interface BasketProductRepository extends JpaRepository<BasketProduct, Lo
     void deleteAllByBasket(Basket basket);
     Optional<BasketProduct> findByBasketAndProduct(Basket basket, Product product);
 
-
     @Query("select bp from BasketProduct bp join fetch bp.product where bp.basket.id= :id")
     List<BasketProduct> findByBasketId(@Param("id") Long basketId);
 }

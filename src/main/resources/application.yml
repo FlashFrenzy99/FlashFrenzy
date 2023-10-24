@@ -49,3 +49,7 @@ spring:
   config:
     activate:
       on-profile: prod
+---
+spring:
+  main:
+    allow-bean-definition-overriding: true
