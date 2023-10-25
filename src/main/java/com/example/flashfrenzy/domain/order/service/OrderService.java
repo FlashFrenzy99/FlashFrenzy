@@ -24,7 +24,6 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
-//@Transactional(readOnly = true)
 @Slf4j(topic = "Order API")
 public class OrderService {
 
@@ -106,5 +105,5 @@ public class OrderService {
         //주문 후 장바구니 내역 삭제
         basketProductRepository.deleteAllByBasket(basket);
     }
-
 }
+

@@ -10,6 +10,8 @@ import com.example.flashfrenzy.domain.user.entity.UserRoleEnum;
 import com.example.flashfrenzy.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,7 +56,7 @@ public class UserService {
 
     public List<OrderResponseDto> getOrders(User user, Pageable pageable) {
         log.debug("주문내역 확인");
-        List<Order> orders = orderRepository.findAllByUser(user);
+        Page<Order> orders = orderRepository.findAllByUser(user, pageable);
 
         return orders.stream().map(OrderResponseDto::new).toList();
     }

@@ -84,10 +84,11 @@ public class Scheduler {
             Long randomNumber = random.nextLong(total) + 1;
             randomNumbers.add(randomNumber);
         }
-        Integer i = 1;
-        List<Long> idList = randomNumbers.stream().toList();
-        List<Product> eventProductList = productRepository.findByIdIn(idList);
 
+        List<Product> eventProductList = productRepository.findByIdIn(randomNumbers);
+
+
+        Integer i = 1;
         AtomicInteger index = new AtomicInteger(1);
         List<Event> eventList = eventProductList.stream().map(
                 product -> {
@@ -97,8 +98,9 @@ public class Scheduler {
 
                     try {
                         String productString = objectMapper.writeValueAsString(product);
+                        Long stock = stockRepository.findById(product.getId()).orElseThrow().getStock();
                         redisRepository.save("product:sale:" + currentIndex + ":stock",
-                                String.valueOf(product.getStock()));
+                                String.valueOf(stock));
                         redisRepository.save("product:sale:"+ currentIndex + ":price",
                                 String.valueOf(product.getPrice()*(100 - rate)/100));
                         redisRepository.save("product:sale:" + currentIndex, productString);
@@ -116,7 +118,7 @@ public class Scheduler {
     }
 
     // 초, 분, 시, 일, 주, 월 순서
-    @Scheduled(cron = "*/10 * * * * *") // 매시간 정각
+    @Scheduled(cron = "0 0 * * * *") // 매시간 정각
     public void updateEventStock() {
         // event -> product -> stock cache update
 

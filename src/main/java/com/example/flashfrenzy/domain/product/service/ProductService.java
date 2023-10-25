@@ -21,11 +21,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+//@Transactional(readOnly = true)
 @Slf4j(topic = "Product API")
 public class ProductService {
 
@@ -52,10 +53,9 @@ public class ProductService {
 //        }).toList();
 
 
-        List<Long> eventIdList = eventRepository.findProductIdList();
+        Set<Long> eventIdList = eventRepository.findProductIdSet();
 
         Stream<Product> list = productRepository.streamAllPaged(pageable);
-//        List<Product> list = productRepository.findTop2000By(pageable);
         List<ProductResponseDto> productResponseDtoList = list.map(product -> {
             if (eventIdList.contains(product.getId())) {
                 Event event = eventRepository.findById(product.getId()).orElseThrow();
@@ -64,15 +64,8 @@ public class ProductService {
                 return new ProductResponseDto(product);
             }
         }).toList();
-//        list.close();
-
-//        Pageable pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
-
-//        int start = (int) pageRequest.getOffset();
-//        int end = Math.min((start + pageRequest.getPageSize()), productResponseDtoList.size());
 
         return new PageImpl<>(productResponseDtoList);
-//        return new PageImpl<>(productResponseDtoList.subList(start,end), pageRequest, productResponseDtoList.size());
     }
 
     public Page<ProductResponseDto> searchProducts(String query, Pageable pageable) {
@@ -107,7 +100,7 @@ public class ProductService {
     }
 
     public Page<ProductResponseDto> categoryProduct(String cate, Pageable pageable) {
-        List<Long> eventIdList = eventRepository.findProductIdList();
+        Set<Long> eventIdList = eventRepository.findProductIdSet();
 
 //        List<Product> list = productRepository.findAllByCategory1(cate);
         Page<Product> list = productRepository.findAllByCategory1(cate, pageable);

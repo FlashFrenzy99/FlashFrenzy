@@ -38,7 +38,7 @@ public class EventService {
                 //캐시 hit
                 try {
                     Product product = objectMapper.readValue(productString, Product.class);
-                    productList.add(new ProductResponseDto(product,Long.parseLong(price),Long.parseLong(stock)));
+                    productList.add(new ProductResponseDto(product, Long.parseLong(price), Long.parseLong(stock)));
                 } catch (JsonProcessingException e) {
                     throw new RuntimeException(e);
                 }

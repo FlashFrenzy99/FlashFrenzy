@@ -44,7 +44,9 @@ public class NaverApiService {
         long start = System.currentTimeMillis();
         // 요청 URL 만들기
         List<Product> productList = new ArrayList<>();
-        for (int i = 1; i <= 10; i++) {
+        List<Stock> stockList = new ArrayList<>();
+
+         for (int i = 1; i <= 10; i++) {
             URI uri = UriComponentsBuilder
                     .fromUriString("https://openapi.naver.com")
                     .path("/v1/search/shop.json")

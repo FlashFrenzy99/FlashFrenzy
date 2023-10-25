@@ -49,6 +49,10 @@ public class RedisRepository {
         return hashOperations.get(key, field).toString();
     }
 
+    public Long decrement(String key, Long count) {
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        return valueOperations.decrement(key, count);
+    }
 
     /**
      * 만료시간 지정 메소드
@@ -62,5 +66,6 @@ public class RedisRepository {
     public Long getTimeToLive(String key) {
         return redisTemplate.getExpire(key);
     }
+
 
 }

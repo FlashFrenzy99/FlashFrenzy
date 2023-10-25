@@ -35,16 +35,12 @@ public class Product {
     @Column(name = "category2", nullable = false)
     private String category2; // 중분류  ex) 하의, 상의
 
-    @Column(name = "stock", nullable = false)
-    private Long stock;
-
     public Product(ItemDto itemDto) {
         this.title = itemDto.getTitle();
         this.image = itemDto.getImage();
         this.price = itemDto.getPrice();
         this.category1 = itemDto.getCategory1();
         this.category2 = itemDto.getCategory2();
-        this.stock = itemDto.getStock();
     }
 
     public Product(Long id, String title, String image, Long price, String category1, String category2, Long stock) {
@@ -54,7 +50,6 @@ public class Product {
         this.price = price;
         this.category1 = category1;
         this.category2 = category2;
-        this.stock = stock;
     }
 
 }
