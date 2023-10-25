@@ -43,11 +43,8 @@ public class Scheduler {
         List<Product> products = orderProductRepository.findAllWithZeroStock().stream().map(
                 OrderProduct::getProduct).toList();
 
-        HashSet<Product> productList = new HashSet<>(products);
-
-        for (Product product : productList) {
-            System.out.println("productId" + product.getId());
-            product.increaseStock();
+        for (Stock stock : stocks) {
+            stock.increase(1000L);
         }
 
         //인기상품 TOP 5
@@ -127,7 +124,7 @@ public class Scheduler {
 
         List<Event> events = eventRepository.findEventProductList();
         for (int i = 1; i <= 20; i++) {
-            Long stock = events.get(i - 1).getProduct().getStock();
+            Long stock = stockRepository.findById(events.get(i - 1).getProduct().getId()).orElseThrow().getStock();
             redisRepository.save("product:sale:" + i + ":stock", String.valueOf(stock));
         }
 

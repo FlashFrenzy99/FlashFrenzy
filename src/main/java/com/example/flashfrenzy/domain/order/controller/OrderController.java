@@ -4,9 +4,7 @@ import com.example.flashfrenzy.domain.order.service.OrderServiceFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -20,8 +18,10 @@ public class OrderController {
         long startTime = System.currentTimeMillis();
         orderServiceFacade.orderBasketProductsFacade(basketId);
         log.info("장바구니 주문 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
-//        장바구니 id 로 userid 받아오기
+        //return "hello";
         return "redirect:/auth/users/my-page";
     }
+
+
 
 }

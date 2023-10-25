@@ -1,39 +1,26 @@
 package com.example.flashfrenzy.domain.order.service;
 
-import com.example.flashfrenzy.domain.basket.dto.BasketRequestForm;
 import com.example.flashfrenzy.domain.basket.entity.Basket;
 import com.example.flashfrenzy.domain.basket.repository.BasketRepository;
 import com.example.flashfrenzy.domain.basketProdcut.entity.BasketProduct;
 import com.example.flashfrenzy.domain.basketProdcut.repository.BasketProductRepository;
 import com.example.flashfrenzy.domain.event.entity.Event;
 import com.example.flashfrenzy.domain.event.repository.EventRepository;
-import com.example.flashfrenzy.domain.order.dto.OrderKafkaMessageDto;
 import com.example.flashfrenzy.domain.order.entity.Order;
 import com.example.flashfrenzy.domain.order.repository.OrderRepository;
 import com.example.flashfrenzy.domain.orderProduct.entity.OrderProduct;
-import com.example.flashfrenzy.domain.product.dto.ProductResponseDto;
-import com.example.flashfrenzy.domain.product.entity.Product;
-import com.example.flashfrenzy.domain.product.repository.ProductRepository;
-import com.example.flashfrenzy.domain.product.service.ProductService;
+import com.example.flashfrenzy.domain.orderProduct.entity.StatusEnum;
+import com.example.flashfrenzy.domain.stock.service.StockService;
 import com.example.flashfrenzy.domain.user.entity.User;
-import com.example.flashfrenzy.global.redis.RedisRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.persistence.EntityManager;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.Redisson;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
-import org.springframework.data.domain.Page;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -46,10 +33,8 @@ public class OrderService {
     private final BasketProductRepository basketProductRepository;
     private final EventRepository eventRepository;
     private final RedissonClient redissonClient;
-    private final ProductRepository productRepository;
-    private final ProductService productService;
-    private final KafkaTemplate<String, String> kafkaTemplate;
-    private final ObjectMapper objectMapper;
+    private final StockService stockService;
+    private final OrderRepository orderRepository;
 
 
     @Transactional
@@ -65,9 +50,7 @@ public class OrderService {
             throw new IllegalArgumentException("장바구니에 물품이 1개 이상 존재해야 주문이 가능합니다.");
         }
 
-        User user = basket.getUser();
-
-        List<Long> eventIdList = eventRepository.findProductIdList();
+        Set<Long> eventIdList = eventRepository.findProductIdSet();
 
         List<OrderProduct> orderProductList = basketProductList.stream().map(basketProduct -> {
             if (eventIdList.contains(basketProduct.getProduct().getId())) {
@@ -93,31 +76,46 @@ public class OrderService {
 //        System.out.println("============================kafka 메세지 전송 완료.");
 
         Order order = new Order();
-        order.addUser(user); // 여기 내부 수정했었음
+        order.addUser(user);
 
+
+        // Order에 orderproduct를 넣고 orderproduct의 status를 진행중으로 한 상태로 보낸다
+        // 만약 성공하면 재고 차감하고 status 성공, 아니면 롤백하고 실패로 변경
         for (OrderProduct orderProduct : orderProductList) {
-            order.addOrderProduct(orderProduct);
-            Product product = orderProduct.getProduct();
 
-            if (product.getStock() < orderProduct.getCount()) {
-                throw new IllegalArgumentException(
-                        "주문하려는 물품의 재고가 부족합니다. name: " + product.getTitle());
+
+            //재고 서비스에서 재고처리 전부 담당하게?
+            Long productId = orderProduct.getProduct().getId();
+
+            RLock lock = redissonClient.getLock("product" + productId);
+            try {
+                //락 획득 시도
+                boolean available = lock.tryLock(20, 5, TimeUnit.SECONDS);
+
+                //락 획득 실패
+                if (!available) {
+                    log.error("주문 시도 중 lock 획득 실패");
+                    orderProduct.updateStatus(StatusEnum.FAIL);
+                    continue;
+                }
+                stockService.decrease(productId, orderProduct.getCount());
+
+                orderProduct.updateStatus(StatusEnum.SUCCESS);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalArgumentException e ) {
+                log.error("재고 부족으로 구매 실패");
+                orderProduct.updateStatus(StatusEnum.FAIL);
             }
-            product.discountStock(orderProduct.getCount());
+            finally {
+                order.addOrderProduct(orderProduct);
+                lock.unlock();
+            }
 
         }
-
-
-
-
-
-
-
-        Order savedOrder = orderRepository.save(order);
-
+        orderRepository.save(order);
         //주문 후 장바구니 내역 삭제
-//        basketProductRepository.deleteAllByBasket(basket);
-
+        basketProductRepository.deleteAllByBasket(basket);
     }
 
 }

@@ -7,6 +7,7 @@ import com.example.flashfrenzy.domain.product.dto.ProductResponseDto;
 import com.example.flashfrenzy.domain.product.entity.Product;
 import com.example.flashfrenzy.domain.product.repository.ProductRepository;
 import com.example.flashfrenzy.domain.product.repository.ProductSearchRepository;
+import com.example.flashfrenzy.domain.stock.repository.StockRepository;
 import com.example.flashfrenzy.global.redis.RedisRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,7 +38,7 @@ public class ProductService {
 
     public Page<ProductResponseDto> getProducts(Pageable pageable) {
         log.debug("상품 조회");
-
+        log.info(stockRepository.findById(1L).get().getStock().toString());
         /*개선 이전*/
 //        List<Product> list = productRepository.findTop2000By();
 //        List<ProductResponseDto> productResponseDtoList = list.stream().map(product -> {

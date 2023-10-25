@@ -52,7 +52,7 @@ public class UserService {
 
     }
 
-    public List<OrderResponseDto> getOrders(User user) {
+    public List<OrderResponseDto> getOrders(User user, Pageable pageable) {
         log.debug("주문내역 확인");
         List<Order> orders = orderRepository.findAllByUser(user);
 

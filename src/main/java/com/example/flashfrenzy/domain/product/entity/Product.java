@@ -57,14 +57,4 @@ public class Product {
         this.stock = stock;
     }
 
-    public void discountStock(Long stock) {
-        if (this.stock < stock) {
-            throw new IllegalArgumentException("재고가 남아있지 않습니다. 남은재고: " + this.stock);
-        }
-        this.stock -= stock;
-    }
-
-    public void increaseStock() {
-        this.stock = 100L;
-    }
 }

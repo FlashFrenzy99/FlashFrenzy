@@ -51,11 +51,10 @@ public class EventService {
 
                 try {
                     productString = objectMapper.writeValueAsString(product);
-
-                    redisRepository.save("product:sale:" + i + ":stock",
-                            String.valueOf(product.getStock()));
-                    redisRepository.save("product:sale:"+ i + ":price",
-                            String.valueOf(product.getPrice()*(100 - rate)/100));
+                    Stock selectStock = stockRepository.findById(product.getId()).orElseThrow();
+                    Long selectStockValue = selectStock.getStock();
+                    redisRepository.save("product:sale:" + i + ":stock", String.valueOf(selectStockValue));
+                    redisRepository.save("product:sale:"+ i + ":price", String.valueOf(product.getPrice()*(100 - rate)/100));
                     redisRepository.save("product:sale:" + i, productString);
                 } catch (JsonProcessingException e) {
                     throw new RuntimeException(e);

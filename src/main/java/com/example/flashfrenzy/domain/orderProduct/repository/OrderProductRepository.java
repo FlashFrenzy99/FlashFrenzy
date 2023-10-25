@@ -11,6 +11,8 @@ public interface OrderProductRepository extends JpaRepository<OrderProduct, Long
     @Query("select distinct op from OrderProduct op join fetch op.product where op.product.stock = 0")
     List<OrderProduct> findAllWithZeroStock();
 
+
+
     @Query("SELECT op.product FROM OrderProduct op GROUP BY op.product.id ORDER BY COUNT(op.product.id) DESC limit 5")
     List<Product> findTop5Order();
 }

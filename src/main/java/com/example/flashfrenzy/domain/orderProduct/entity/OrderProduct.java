@@ -31,6 +31,10 @@ public class OrderProduct {
 
     private Long price;
 
+    @Enumerated(value = EnumType.STRING)
+    private StatusEnum status = StatusEnum.PENDING;
+
+
     public OrderProduct(BasketProduct basketProduct) {
         this.product = basketProduct.getProduct();
         this.count = basketProduct.getCount();

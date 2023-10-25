@@ -23,11 +23,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByIdIn(List<Long> idList);
 
 
-//    List<Product> findTop2000ByCategory1(String cate);
-
     @Query("select p from Product p where p.category1 =:category1")
     Page<Product> findAllByCategory1(@Param("category1") String category1, Pageable pageable);
-//    List<Product> findAllByCategory1(@Param("category1") String category1);
 
     @Query("select p from Product p")
     Stream<Product> streamAllPaged(Pageable pageable);

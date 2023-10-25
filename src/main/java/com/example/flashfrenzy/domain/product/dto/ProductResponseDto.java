@@ -22,6 +22,8 @@ public class ProductResponseDto {
 
     private Long stock;
 
+    private Long stock;
+
     public ProductResponseDto(Product product) {
         this.id = product.getId();
         this.title = product.getTitle();
