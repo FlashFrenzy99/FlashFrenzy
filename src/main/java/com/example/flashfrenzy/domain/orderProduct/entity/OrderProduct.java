@@ -51,4 +51,7 @@ public class OrderProduct {
         this.order = order;
     }
 
+    public void updateStatus(StatusEnum status) {
+        this.status = status;
+    }
 }

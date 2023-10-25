@@ -63,6 +63,7 @@ public class OrderService {
             }
         }).toList();
 
+        User user = basket.getUser();
         Order order = new Order();
         order.addUser(user);
 

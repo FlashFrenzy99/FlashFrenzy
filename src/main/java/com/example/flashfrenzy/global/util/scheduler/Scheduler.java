@@ -8,6 +8,8 @@ import com.example.flashfrenzy.domain.product.dto.ProductRankDto;
 import com.example.flashfrenzy.domain.product.dto.ProductResponseDto;
 import com.example.flashfrenzy.domain.product.entity.Product;
 import com.example.flashfrenzy.domain.product.repository.ProductRepository;
+import com.example.flashfrenzy.domain.stock.entity.Stock;
+import com.example.flashfrenzy.domain.stock.repository.StockRepository;
 import com.example.flashfrenzy.global.redis.RedisRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,6 +35,7 @@ public class Scheduler {
     private final EventRepository eventRepository;
     private final RedisRepository redisRepository;
     private final ObjectMapper objectMapper;
+    private final StockRepository stockRepository;
 
     // 초, 분, 시, 일, 주, 월 순서
     @Scheduled(cron = "0 0 0 * * *") // 매일 자정
@@ -40,8 +43,7 @@ public class Scheduler {
     public void initProducts() throws JsonProcessingException {
 
         //재고 채우기
-        List<Product> products = orderProductRepository.findAllWithZeroStock().stream().map(
-                OrderProduct::getProduct).toList();
+        Set<Stock> stocks = stockRepository.findAllWithZeroStock();
 
         for (Stock stock : stocks) {
             stock.increase(1000L);

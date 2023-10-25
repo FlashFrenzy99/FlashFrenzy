@@ -5,6 +5,9 @@ import com.example.flashfrenzy.domain.user.dto.SignupRequestDto;
 import com.example.flashfrenzy.domain.user.service.UserService;
 import com.example.flashfrenzy.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -48,8 +51,10 @@ public class UserController {
     }
 
     @GetMapping("/my-page")
-    public String myPage(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-       List<OrderResponseDto> orders = userService.getOrders(userDetails.getUser());
+    public String myPage(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails
+            ,@PageableDefault(size = 15, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+       List<OrderResponseDto> orders = userService.getOrders(userDetails.getUser(), pageable);
        model.addAttribute("orders", orders);
 
        return "my-page";

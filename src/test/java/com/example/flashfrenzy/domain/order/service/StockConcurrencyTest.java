@@ -2,6 +2,7 @@ package com.example.flashfrenzy.domain.order.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.example.flashfrenzy.domain.product.entity.Product;
 import com.example.flashfrenzy.domain.product.repository.ProductRepository;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -26,6 +27,7 @@ public class StockConcurrencyTest {
 
     @Autowired
     private RedissonClient redissonClient;
+
 
 
     @Test

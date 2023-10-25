@@ -1,3 +1,4 @@
+
 package com.example.flashfrenzy.domain.product.entity;
 
 import com.example.flashfrenzy.global.data.dto.ItemDto;
@@ -10,7 +11,6 @@ import org.springframework.data.elasticsearch.annotations.Field;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "product", indexes = @Index(name = "idx_category1", columnList = "category1"))
 @Document(indexName = "product")
 public class Product {
     @Id

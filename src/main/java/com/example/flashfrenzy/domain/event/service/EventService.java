@@ -1,20 +1,21 @@
 package com.example.flashfrenzy.domain.event.service;
 
-import com.example.flashfrenzy.domain.event.dto.EventCreateRequestDto;
 import com.example.flashfrenzy.domain.event.entity.Event;
 import com.example.flashfrenzy.domain.event.repository.EventRepository;
 import com.example.flashfrenzy.domain.product.dto.ProductResponseDto;
 import com.example.flashfrenzy.domain.product.entity.Product;
-import com.example.flashfrenzy.domain.product.repository.ProductRepository;
+import com.example.flashfrenzy.domain.stock.entity.Stock;
+import com.example.flashfrenzy.domain.stock.repository.StockRepository;
 import com.example.flashfrenzy.global.redis.RedisRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,9 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class EventService {
 
     private final EventRepository eventRepository;
-    private final ProductRepository productRepository;
     private final RedisRepository redisRepository;
     private final ObjectMapper objectMapper;
+    private final StockRepository stockRepository;
 
     public List<ProductResponseDto> getEventProductList() {
 
