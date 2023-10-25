@@ -11,16 +11,15 @@ import com.example.flashfrenzy.domain.stock.repository.StockRepository;
 import com.example.flashfrenzy.global.redis.RedisRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -35,7 +34,8 @@ public class ProductService {
     private final ProductSearchRepository productSearchRepository;
     private final RedisRepository redisRepository;
     private final ObjectMapper objectMapper;
-
+    private final StockRepository stockRepository;
+    @Transactional(readOnly = true)
     public Page<ProductResponseDto> getProducts(Pageable pageable) {
         log.debug("상품 조회");
         log.info(stockRepository.findById(1L).get().getStock().toString());
@@ -87,13 +87,13 @@ public class ProductService {
 
 
         startTime = System.currentTimeMillis();
-        Page<ProductResponseDto> productResponseDtoList2 = productSearchRepository.searchByTitle(query, pageable).map(ProductResponseDto::new);
+        Page<ProductResponseDto> productResponseDtoList = productSearchRepository.searchByTitle(query, pageable).map(ProductResponseDto::new);
         log.info("엘라스틱 서치 elapsed time : " + (System.currentTimeMillis() - startTime) + "ms.");
 
 
 //        return new PageImpl<>(productResponseDtoList.subList(start,end), pageRequest, productResponseDtoList.size());
         //return new PageImpl<>(productResponseDtoList2);
-        return productResponseDtoList2;
+        return productResponseDtoList;
     }
 
 
@@ -146,6 +146,5 @@ public class ProductService {
             }
         }
         return productRankList;
-
     }
 }

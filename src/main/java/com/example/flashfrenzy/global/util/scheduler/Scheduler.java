@@ -55,21 +55,19 @@ public class Scheduler {
             ProductRankDto productRankDto = new ProductRankDto(product.getId(), product.getTitle());
             String productRankString = objectMapper.writeValueAsString(productRankDto);
             redisRepository.save("product:rank:" + i, productRankString);
-
-            String value = redisRepository.getValue("product:rank:" + i);
             i++;
         }
-
     }
 
     // 초, 분, 시, 일, 주, 월 순서
     @Scheduled(cron = "0 0 9 * * *") // 매일 오전 9시
     public void updateEvent() {
-        //오전 9시 마다 이벤트 일괄 삭제 및 세일 상품 등록(20개)
+        //오전 9시 마다 이벤트 상품 일괄 삭제 및 신규 이벤트 상품 등록(20개)
         long startTime = System.currentTimeMillis();
 
         eventRepository.deleteAll();
-
+        
+        // 총 상품 개수 구하기
         String productTotal = redisRepository.getValue("product:total");
         Long total;
         if (productTotal == null) {
@@ -79,9 +77,9 @@ public class Scheduler {
             total = Long.valueOf(productTotal);
         }
 
+        // 총 상품중 랜덤 20개 뽑기
         Set<Long> randomNumbers = new HashSet<>();
         Random random = new Random();
-
         while (randomNumbers.size() < 20) {
             Long randomNumber = random.nextLong(total) + 1;
             randomNumbers.add(randomNumber);

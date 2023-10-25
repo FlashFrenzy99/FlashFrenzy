@@ -32,7 +32,7 @@ public class EventService {
         List<ProductResponseDto> productList = new ArrayList<>();
         for (int i = 1; i <= 20; i++) {
             String stock = redisRepository.getValue("product:sale:" + i + ":stock");
-            String price = redisRepository.getValue("product:sale:" + i+":price");
+            String price = redisRepository.getValue("product:sale:" + i + ":price");
             String productString = redisRepository.getValue("product:sale:" + i);
             if (productString != null) {
                 //캐시 hit

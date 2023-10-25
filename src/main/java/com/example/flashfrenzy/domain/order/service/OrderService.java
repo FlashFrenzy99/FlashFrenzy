@@ -28,7 +28,6 @@ import java.util.concurrent.TimeUnit;
 @Slf4j(topic = "Order API")
 public class OrderService {
 
-    private final OrderRepository orderRepository;
     private final BasketRepository basketRepository;
     private final BasketProductRepository basketProductRepository;
     private final EventRepository eventRepository;
@@ -36,10 +35,11 @@ public class OrderService {
     private final StockService stockService;
     private final OrderRepository orderRepository;
 
-
-    @Transactional
     public void orderBasketProducts(Long id) {
         log.debug("장바구니 상품 주문");
+
+        // 장바구니 존재 여부 확인
+
         Basket basket = basketRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당 장바구니가 존재하지 않습니다.")
         );
@@ -63,17 +63,6 @@ public class OrderService {
                 return new OrderProduct(basketProduct);
             }
         }).toList();
-
-//        OrderKafkaMessageDto orderKafkaMessageDto = new OrderKafkaMessageDto(orderProductList,
-//                user.getId());
-//        String orderRequest = orderKafkaMessageDto.toJSON();
-//        System.out.println(orderRequest);
-//        System.out.println("============================kafka 메세지 전송 시작.");
-//        long startTime = System.currentTimeMillis();
-//
-//        kafkaTemplate.send("order", orderRequest);
-//        log.info("카프카 메세지 전송 elapsed time : " + (System.currentTimeMillis() - startTime) + "ms.");
-//        System.out.println("============================kafka 메세지 전송 완료.");
 
         Order order = new Order();
         order.addUser(user);
