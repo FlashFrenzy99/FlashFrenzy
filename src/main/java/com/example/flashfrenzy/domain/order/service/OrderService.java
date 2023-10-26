@@ -2,6 +2,7 @@ package com.example.flashfrenzy.domain.order.service;
 
 import com.example.flashfrenzy.domain.basket.entity.Basket;
 import com.example.flashfrenzy.domain.basket.repository.BasketRepository;
+import com.example.flashfrenzy.domain.basket.service.BasketService;
 import com.example.flashfrenzy.domain.basketProdcut.entity.BasketProduct;
 import com.example.flashfrenzy.domain.basketProdcut.repository.BasketProductRepository;
 import com.example.flashfrenzy.domain.event.entity.Event;
@@ -64,10 +65,7 @@ public class OrderService {
         String eventIdListString = redisRepository.getValue("product:sale:list");
         if (eventIdListString != null) {
             try {
-                // todo: 이게 되나? 체크필요
                 eventIdList = Sets.newHashSet(objectMapper.readValue(eventIdListString, Long[].class));
-
-
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
