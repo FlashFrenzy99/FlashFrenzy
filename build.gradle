@@ -20,11 +20,15 @@ dependencies {
     runtimeOnly 'com.h2database:h2'
     implementation 'org.springframework.data:spring-data-elasticsearch:4.2.2'
 
+    // Kafka
+    implementation 'org.springframework.kafka:spring-kafka:3.0.9'
+    testImplementation 'org.springframework.kafka:spring-kafka-test:.3.0.9'
+
     //implementation 'org.springframework.data:spring-data-elasticsearch'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     //implementation 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.17.11'
 
-//Redisson
+    //Redisson
     implementation group: 'org.redisson', name: 'redisson-spring-boot-starter', version: '3.23.5'
 
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
@@ -67,11 +71,7 @@ dependencies {
     //Redisson
     implementation group: 'org.redisson', name: 'redisson-spring-boot-starter', version: '3.23.5'
 
-    //kafka
-    implementation 'org.springframework.kafka:spring-kafka'
-
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
-
 }
 
 tasks.named('test') {
