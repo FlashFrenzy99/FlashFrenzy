@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -62,11 +64,12 @@ public class Scheduler {
     }
 
     // 초, 분, 시, 일, 주, 월 순서
+    @PostConstruct
     @Scheduled(cron = "0 0 9 * * *") // 매일 오전 9시
     public void updateEvent() {
         //오전 9시 마다 이벤트 상품 일괄 삭제 및 신규 이벤트 상품 등록(20개)
         long startTime = System.currentTimeMillis();
-
+        log.info("updateEvent 실행");
         eventRepository.deleteAll();
         
         // 총 상품 개수 구하기

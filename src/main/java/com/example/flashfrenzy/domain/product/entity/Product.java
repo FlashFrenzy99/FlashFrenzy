@@ -12,6 +12,7 @@ import org.springframework.data.elasticsearch.annotations.Field;
 @Getter
 @NoArgsConstructor
 @Document(indexName = "product")
+@Table(name = "product", indexes = @Index(name = "idx_category1", columnList = "category1"))
 public class Product {
     @Id
     @Column(name = "product_id")

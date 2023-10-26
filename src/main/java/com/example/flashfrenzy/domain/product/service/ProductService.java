@@ -39,7 +39,6 @@ public class ProductService {
     @Transactional(readOnly = true)
     public Page<ProductResponseDto> getProducts(Pageable pageable) {
         log.debug("상품 조회");
-        log.info(stockRepository.findById(1L).get().getStock().toString());
         /*개선 이전*/
 //        List<Product> list = productRepository.findTop2000By();
 //        List<ProductResponseDto> productResponseDtoList = list.stream().map(product -> {
@@ -120,6 +119,7 @@ public class ProductService {
 
 //        return new PageImpl<>(productResponseDtoList.subList(start,end), pageRequest, productResponseDtoList.size());
         return new PageImpl<>(productResponseDtoList, pageable, list.getTotalElements());
+
     }
 
     public List<ProductRankDto> getProductRank() {
