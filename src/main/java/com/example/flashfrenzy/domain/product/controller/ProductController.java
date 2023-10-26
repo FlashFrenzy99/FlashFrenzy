@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@Tag(name = "product", description = "상품 API")
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/api/products")
@@ -30,7 +29,6 @@ public class ProductController {
     /**
      * 상품 리스트 조회
      */
-    @Operation(summary = "상품 리스트 조회", description = "그렇다고")
     @GetMapping
     public String getProducts(Model model,@PageableDefault(size = 15, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         long startTime = System.currentTimeMillis();
@@ -43,7 +41,6 @@ public class ProductController {
     /**
      * 상품 검색
      */
-    @Operation(summary = "상품 검색", description = "그렇다고")
     @GetMapping("/search")
     public String searchProducts(Model model, @RequestParam(value = "query") String query,
                                  @PageableDefault(size = 15,sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
@@ -57,7 +54,6 @@ public class ProductController {
     /**
      * 상품 상세 조회
      */
-    @Operation(summary = "상품 단품 조회", description = "그렇다고")
     @GetMapping("/{id}")
     public String detailsProduct(Model model, @PathVariable(value = "id") Long productId){
         ProductResponseDto product = productService.detailsProduct(productId);
@@ -65,7 +61,6 @@ public class ProductController {
         return "product";
     }
 
-    @Operation(summary = "상품 카테고리별 조회", description = " ")
     @GetMapping("/category")
     public String categoryProduct(Model model, @RequestParam String cate,
                                   @PageableDefault(size = 15, sort = "id", direction = Sort.Direction.ASC) Pageable pageable){
