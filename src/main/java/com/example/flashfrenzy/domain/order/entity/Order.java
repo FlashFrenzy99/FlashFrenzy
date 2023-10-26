@@ -1,11 +1,10 @@
 package com.example.flashfrenzy.domain.order.entity;
 
-import com.example.flashfrenzy.domain.basketProdcut.entity.BasketProduct;
 import com.example.flashfrenzy.domain.orderProduct.entity.OrderProduct;
+import com.example.flashfrenzy.domain.orderProduct.entity.StatusEnum;
 import com.example.flashfrenzy.domain.user.entity.User;
 import com.example.flashfrenzy.global.entity.TimeStamp;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -38,7 +37,11 @@ public class Order extends TimeStamp {
     }
 
     public void addOrderProduct(OrderProduct orderProduct) {
-        addTotalPrice(orderProduct.getPrice()*orderProduct.getCount());
+
+        if (orderProduct.getStatus() == StatusEnum.SUCCESS) {
+            addTotalPrice(orderProduct.getPrice() * orderProduct.getCount());
+        }
+
         this.orderProductList.add(orderProduct);
         orderProduct.addOrder(this);
     }

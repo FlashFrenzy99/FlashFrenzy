@@ -2,6 +2,8 @@ package com.example.flashfrenzy.global.data.service;
 
 import com.example.flashfrenzy.domain.product.entity.Product;
 import com.example.flashfrenzy.domain.product.repository.ProductRepository;
+import com.example.flashfrenzy.domain.stock.entity.Stock;
+import com.example.flashfrenzy.domain.stock.repository.StockRepository;
 import com.example.flashfrenzy.global.data.dto.ItemDto;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
@@ -24,10 +26,12 @@ public class NaverApiService {
 
     private final RestTemplate restTemplate;
     private final ProductRepository productRepository;
+    private final StockRepository stockRepository;
 
-    public NaverApiService(RestTemplateBuilder builder, ProductRepository productRepository) {
+    public NaverApiService(RestTemplateBuilder builder, ProductRepository productRepository, StockRepository stockRepository) {
         this.restTemplate = builder.build();
         this.productRepository = productRepository;
+        this.stockRepository = stockRepository;
     }
 
     @Value("${naver.client-id}")
@@ -40,7 +44,9 @@ public class NaverApiService {
         long start = System.currentTimeMillis();
         // 요청 URL 만들기
         List<Product> productList = new ArrayList<>();
-        for (int i = 1; i <= 10; i++) {
+        List<Stock> stockList = new ArrayList<>();
+
+         for (int i = 1; i <= 10; i++) {
             URI uri = UriComponentsBuilder
                     .fromUriString("https://openapi.naver.com")
                     .path("/v1/search/shop.json")
@@ -67,9 +73,12 @@ public class NaverApiService {
 
             itemDtoList.forEach(itemDto -> {
                 Product product = new Product(itemDto);
+                Stock stock = new Stock(1000L, product);
+                stockList.add(stock);
                 productList.add(product);
             });
         }
+        this.stockRepository.saveAll(stockList);
         this.productRepository.saveAll(productList);
         log.info("elapsed time : " + (System.currentTimeMillis() - start) + "ms");
     }

@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +41,7 @@ public class BasketService {
         List<BasketProduct> list = basketProductRepository.findByBasketId(basket.getId());
 
 
-        List<Long> eventIdList = eventRepository.findProductIdList();
+        Set<Long> eventIdList = eventRepository.findProductIdSet();
 
         return list.stream()
                 .map(basketProduct -> {
