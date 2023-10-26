@@ -31,7 +31,7 @@ public class BasketController {
     public String getBasket(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model){
         long startTime = System.currentTimeMillis();
         List<BasketProductResponseDto> basketProducts = basketService.getBasket(userDetails.getUser());
-        log.info("장바구니 조회 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
+        log.debug("장바구니 조회 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
         model.addAttribute("basketProducts", basketProducts);
         return "basket";
     }
@@ -41,14 +41,14 @@ public class BasketController {
     public String addBasket(@PathVariable(value = "id") Long basketId, @ModelAttribute BasketRequestForm requestForm){
         long startTime = System.currentTimeMillis();
         basketService.addBasket(basketId, requestForm);
-        log.info("장바구니 담기 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
+        log.debug("장바구니 담기 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
         return "redirect:/api/baskets";
     }
     @DeleteMapping("/{id}")         // basketProduct_id
     public String deleteBasket(@PathVariable(value = "id") Long basketProductId){
         long startTime = System.currentTimeMillis();
         basketService.deleteBasket(basketProductId);
-        log.info("장바구니 상품 삭제 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
+        log.debug("장바구니 상품 삭제 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
         return "redirect:/api/baskets";
     }
 }

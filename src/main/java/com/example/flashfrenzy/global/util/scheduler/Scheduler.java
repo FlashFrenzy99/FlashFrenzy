@@ -69,7 +69,7 @@ public class Scheduler {
     public void updateEvent() {
         //오전 9시 마다 이벤트 상품 일괄 삭제 및 신규 이벤트 상품 등록(20개)
         long startTime = System.currentTimeMillis();
-        log.info("updateEvent 실행");
+        log.debug("updateEvent 실행");
         eventRepository.deleteAll();
         
         // 총 상품 개수 구하기
@@ -151,7 +151,7 @@ public class Scheduler {
 
         eventRepository.saveAll(eventList);
 
-        log.info("스케줄 elapsed time : " + (System.currentTimeMillis() - startTime) + "ms.");
+        log.debug("스케줄 elapsed time : " + (System.currentTimeMillis() - startTime) + "ms.");
     }
 
     // 초, 분, 시, 일, 주, 월 순서

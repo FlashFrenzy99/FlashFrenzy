@@ -25,7 +25,7 @@ public class HomeController {
         long startTime = System.currentTimeMillis();
         List<ProductRankDto> productRankList = productService.getProductRank();
         Page<ProductResponseDto> productList = productService.getProducts(pageable);
-        log.info("홈화면 조회 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
+        log.debug("홈화면 조회 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
 
         model.addAttribute("productList", productList);
         model.addAttribute("productRankList", productRankList);
