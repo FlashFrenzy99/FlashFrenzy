@@ -90,25 +90,27 @@ public class Scheduler {
             randomNumbers.add(randomNumber);
         }
 
+        /**/
+        try {
+            redisRepository.setExpire("product:sale:list",0L);
+            String eventIdList = objectMapper.writeValueAsString(randomNumbers.stream().toList());
+            redisRepository.save("product:sale:list",eventIdList);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
         List<Product> eventProductList = productRepository.findByIdIn(randomNumbers);
-
-
-        Integer i = 1;
-        AtomicInteger index = new AtomicInteger(1);
         List<Event> eventList = eventProductList.stream().map(
                 product -> {
                     //레디스에 현재 재고 저장
-                    int currentIndex = index.getAndIncrement();
                     int rate = 10 + (int) (Math.random() * 7) * 5; // 10 ~ 40
 
                     try {
                         String productString = objectMapper.writeValueAsString(product);
                         Long stock = stockRepository.findById(product.getId()).orElseThrow().getStock();
-                        redisRepository.save("product:sale:" + currentIndex + ":stock",
-                                String.valueOf(stock));
-                        redisRepository.save("product:sale:"+ currentIndex + ":price",
-                                String.valueOf(product.getPrice()*(100 - rate)/100));
-                        redisRepository.save("product:sale:" + currentIndex, productString);
+                        redisRepository.saveAndSetExpire("product:sale:" + product.getId() + ":stock", String.valueOf(stock),24*61*60L);
+                        redisRepository.saveAndSetExpire("product:sale:"+ product.getId() + ":price", String.valueOf(product.getPrice()*(100 - rate)/100),24*61*60L);
+                        redisRepository.saveAndSetExpire("product:sale:" + product.getId(), productString,24*61L*60L);
                     } catch (JsonProcessingException e) {
                         log.error("상품을 스트링으로 변환하는 도중 오류가 발생하였습니다.");
                         throw new RuntimeException(e);
@@ -116,6 +118,36 @@ public class Scheduler {
                     return new Event(product, rate);
                 }
         ).toList();
+        /**/
+
+
+
+
+//        List<Product> eventProductList = productRepository.findByIdIn(randomNumbers);
+//
+//        Integer i = 1;
+//        AtomicInteger index = new AtomicInteger(1);
+//        List<Event> eventList = eventProductList.stream().map(
+//                product -> {
+//                    //레디스에 현재 재고 저장
+//                    int currentIndex = index.getAndIncrement();
+//                    int rate = 10 + (int) (Math.random() * 7) * 5; // 10 ~ 40
+//
+//                    try {
+//                        String productString = objectMapper.writeValueAsString(product);
+//                        Long stock = stockRepository.findById(product.getId()).orElseThrow().getStock();
+//                        redisRepository.save("product:sale:" + currentIndex + ":stock",
+//                                String.valueOf(stock));
+//                        redisRepository.save("product:sale:"+ currentIndex + ":price",
+//                                String.valueOf(product.getPrice()*(100 - rate)/100));
+//                        redisRepository.save("product:sale:" + currentIndex, productString);
+//                    } catch (JsonProcessingException e) {
+//                        log.error("상품을 스트링으로 변환하는 도중 오류가 발생하였습니다.");
+//                        throw new RuntimeException(e);
+//                    }
+//                    return new Event(product, rate);
+//                }
+//        ).toList();
 
         eventRepository.saveAll(eventList);
 
@@ -123,15 +155,15 @@ public class Scheduler {
     }
 
     // 초, 분, 시, 일, 주, 월 순서
-    @Scheduled(cron = "0 0 * * * *") // 매시간 정각
-    public void updateEventStock() {
-        // event -> product -> stock cache update
-
-        List<Event> events = eventRepository.findEventProductList();
-        for (int i = 1; i <= 20; i++) {
-            Long stock = stockRepository.findById(events.get(i - 1).getProduct().getId()).orElseThrow().getStock();
-            redisRepository.save("product:sale:" + i + ":stock", String.valueOf(stock));
-        }
-
-    }
+//    @Scheduled(cron = "0 0 * * * *") // 매시간 정각
+//    public void updateEventStock() {
+//        // event -> product -> stock cache update
+//
+//        List<Event> events = eventRepository.findEventProductList();
+//        for (int i = 1; i <= 20; i++) {
+//            Long stock = stockRepository.findById(events.get(i - 1).getProduct().getId()).orElseThrow().getStock();
+//            redisRepository.save("product:sale:" + i + ":stock", String.valueOf(stock));
+//        }
+//
+//    }
 }

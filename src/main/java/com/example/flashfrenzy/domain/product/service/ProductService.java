@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -99,9 +100,46 @@ public class ProductService {
     }
 
     public Page<ProductResponseDto> categoryProduct(String cate, Pageable pageable) {
+
+        int pageNum = pageable.getPageNumber();
+        String value = redisRepository.getValue("category:" + cate + ":pagenum:" + pageNum);
+
+        if (pageNum < 15) {
+            if (value == null) {
+                Set<Long> eventIdList = eventRepository.findProductIdSet();
+                Page<Product> list = productRepository.findAllByCategory1(cate, pageable);
+                List<ProductResponseDto> productResponseDtoList = list.stream().map(product -> {
+                    if (eventIdList.contains(product.getId())) {
+                        Event event = eventRepository.findById(product.getId()).orElseThrow();
+                        return new ProductResponseDto(product, event.getSaleRate());
+                    } else {
+                        return new ProductResponseDto(product);
+                    }
+                }).toList();
+                try {
+                    value = objectMapper.writeValueAsString(productResponseDtoList);
+                    redisRepository.save("category:" + cate + ":pagenum:" + pageNum, value);
+                    return new PageImpl<>(productResponseDtoList, pageable, list.getTotalElements());
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                try {
+                    Page<ProductResponseDto> productList = new PageImpl<>(Arrays.asList(objectMapper.readValue(value, ProductResponseDto[].class)));
+                    return productList;
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+
+
         Set<Long> eventIdList = eventRepository.findProductIdSet();
 
-//        List<Product> list = productRepository.findAllByCategory1(cate);
+        
+
+        
+
         Page<Product> list = productRepository.findAllByCategory1(cate, pageable);
         List<ProductResponseDto> productResponseDtoList = list.stream().map(product -> {
             if (eventIdList.contains(product.getId())) {
@@ -112,12 +150,6 @@ public class ProductService {
             }
         }).toList();
 
-//        Pageable pageRequest = PageRequest.of(0, 15);
-
-//        int start = (int) pageRequest.getOffset();
-//        int end = Math.min((start + pageRequest.getPageSize()), productResponseDtoList.size());
-
-//        return new PageImpl<>(productResponseDtoList.subList(start,end), pageRequest, productResponseDtoList.size());
         return new PageImpl<>(productResponseDtoList, pageable, list.getTotalElements());
 
     }

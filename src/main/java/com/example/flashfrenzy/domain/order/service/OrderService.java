@@ -12,12 +12,17 @@ import com.example.flashfrenzy.domain.orderProduct.entity.OrderProduct;
 import com.example.flashfrenzy.domain.orderProduct.entity.StatusEnum;
 import com.example.flashfrenzy.domain.stock.service.StockService;
 import com.example.flashfrenzy.domain.user.entity.User;
+import com.example.flashfrenzy.global.redis.RedisRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.common.util.set.Sets;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -34,11 +39,113 @@ public class OrderService {
     private final StockService stockService;
     private final OrderRepository orderRepository;
 
+    /**/
+    private final RedisRepository redisRepository;
+    private final ObjectMapper objectMapper;
+    /**/
+
     public void orderBasketProducts(Long id) {
         log.debug("장바구니 상품 주문");
 
-        // 장바구니 존재 여부 확인
+        /**/
 
+        // 장바구니 존재 여부 확인
+        Basket basket = basketRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당 장바구니가 존재하지 않습니다.")
+        );
+
+        List<BasketProduct> basketProductList = basketProductRepository.findByBasketId(id);
+
+        if (basketProductList.isEmpty()) {
+            throw new IllegalArgumentException("장바구니에 물품이 1개 이상 존재해야 주문이 가능합니다.");
+        }
+
+        Set<Long> eventIdList;
+        String eventIdListString = redisRepository.getValue("product:sale:list");
+        if (eventIdListString != null) {
+            try {
+                // todo: 이게 되나? 체크필요
+                eventIdList = Sets.newHashSet(objectMapper.readValue(eventIdListString, Long[].class));
+
+
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            eventIdList = eventRepository.findProductIdSet();
+        }
+
+        List<OrderProduct> orderProductList = basketProductList.stream().map(basketProduct -> {
+            if (eventIdList.contains(basketProduct.getProduct().getId())) {
+
+                Event event = eventRepository.findByProductId(basketProduct.getProduct().getId())
+                        .orElseThrow(
+                                () -> new IllegalArgumentException("해당 이벤트 상품이 없습니다.")
+                        );
+                return new OrderProduct(basketProduct, event.getSaleRate());
+            } else {
+                return new OrderProduct(basketProduct);
+            }
+        }).toList();
+
+        User user = basket.getUser();
+        Order order = new Order();
+        order.addUser(user);
+
+        for (OrderProduct orderProduct : orderProductList) {
+
+            Long productId = orderProduct.getProduct().getId();
+
+            RLock lock = redissonClient.getLock("product" + productId);
+            try {
+                boolean available = lock.tryLock(20, 5, TimeUnit.SECONDS);
+
+                if (!available) {
+                    log.error("주문 시도 중 lock 획득 실패");
+                    orderProduct.updateStatus(StatusEnum.FAIL);
+                    continue;
+                }
+
+                stockService.decrease(productId, orderProduct.getCount());
+
+                if (eventIdList.contains(productId)) {
+                    redisRepository.decrement("product:sale:" + productId + ":stock", orderProduct.getCount());
+                }
+
+                orderProduct.updateStatus(StatusEnum.SUCCESS);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalArgumentException e ) {
+                log.error("재고 부족으로 구매 실패");
+                orderProduct.updateStatus(StatusEnum.FAIL);
+            }
+            finally {
+                order.addOrderProduct(orderProduct);
+                lock.unlock();
+            }
+
+        }
+        orderRepository.save(order);
+        //주문 후 장바구니 내역 삭제
+        basketProductRepository.deleteAllByBasket(basket);
+
+        /**/
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /*
+
+        // 장바구니 존재 여부 확인
         Basket basket = basketRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당 장바구니가 존재하지 않습니다.")
         );
@@ -105,6 +212,9 @@ public class OrderService {
         orderRepository.save(order);
         //주문 후 장바구니 내역 삭제
         basketProductRepository.deleteAllByBasket(basket);
+
+
+     */
     }
 }
 

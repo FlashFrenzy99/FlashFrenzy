@@ -25,5 +25,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("select p from Product p")
     Stream<Product> streamAllPaged(Pageable pageable);
 
+    Product findProductById(Long id);
+
 
 }

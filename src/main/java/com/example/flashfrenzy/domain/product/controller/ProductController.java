@@ -1,14 +1,14 @@
 package com.example.flashfrenzy.domain.product.controller;
 
 import com.example.flashfrenzy.domain.product.dto.ProductResponseDto;
-import com.example.flashfrenzy.domain.product.repository.ProductRepository;
-import com.example.flashfrenzy.domain.product.repository.ProductSearchRepository;
 import com.example.flashfrenzy.domain.product.service.ProductService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import com.example.flashfrenzy.global.redis.RedisRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Arrays;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/api/products")
@@ -26,6 +28,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ProductController {
 
     private final ProductService productService;
+    private final RedisRepository redisRepository;
+    private final ObjectMapper objectMapper;
     /**
      * 상품 리스트 조회
      */
@@ -65,7 +69,12 @@ public class ProductController {
     public String categoryProduct(Model model, @RequestParam String cate,
                                   @PageableDefault(size = 15, sort = "id", direction = Sort.Direction.ASC) Pageable pageable){
         long startTime = System.currentTimeMillis();
-        model.addAttribute("productList", productService.categoryProduct(cate, pageable));
+
+        
+            Page<ProductResponseDto> productList = productService.categoryProduct(cate, pageable);
+            model.addAttribute("productList", productList);
+
+
         log.info("카테고리 검색 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
         return "product-list";
     }
