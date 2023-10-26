@@ -93,4 +93,10 @@ public class BasketService {
         );
         basketProductRepository.delete(basketProduct);
     }
+
+    @Transactional
+    public void clearBasket(Long id) {
+        basketProductRepository.deleteAllByBasketId(id);
+    }
+
 }
