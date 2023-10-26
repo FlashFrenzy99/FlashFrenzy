@@ -22,7 +22,8 @@
             return cookies[key] || null;
         };
         $(document).ready(function () {
-            if(document.cookie!=null){
+
+            if(getCookieValue('Authorization')!=null){
                 $('#sign-in').hide()
                 $('#sign-up').hide()
             }else{

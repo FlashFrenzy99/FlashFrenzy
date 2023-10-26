@@ -14,7 +14,6 @@ public class ItemDto {
     private Long price;
     private String category1; // 대분류  ex) 옷
     private String category2; // 중분류  ex) 하의, 상의
-    private Long stock;
 
     public ItemDto(JSONObject itemJson) {
         this.title = itemJson.getString("title").replace("<b>","").replace("</b>","");
@@ -22,6 +21,5 @@ public class ItemDto {
         this.price = (long) itemJson.getInt("lprice");
         this.category1 = itemJson.getString("category1");
         this.category2 = itemJson.getString("category2");
-        this.stock = 100L;
     }
 }

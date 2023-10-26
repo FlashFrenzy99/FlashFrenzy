@@ -41,22 +41,18 @@
     <table>
         <thead>
         <tr id="test">
-            <th>Product ID</th>
             <th>Title</th>
             <th>Image</th>
             <th>Price</th>
             <th>Category 1</th>
             <th>Category 2</th>
             <th>Stock</th>
-            <th>Price</th>
         </tr>
         </thead>
         <tbody>
         <!-- 반복문을 사용하여 리스트를 순회하고 각 항목을 표시 -->
         <tr th:each="product : ${basketProducts}">
-            <td th:text="${product.basketProductId}"></td>
             <td th:text="${product.title}"></td>
-            <td th:text="${product.image}"></td>
             <td>
                 <img th:src="${product.image}" width="200" height="200">
             </td>

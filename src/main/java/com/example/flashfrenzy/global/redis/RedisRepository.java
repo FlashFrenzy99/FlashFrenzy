@@ -22,6 +22,11 @@ public class RedisRepository {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
         valueOperations.set(key, value);
     }
+    public void saveAndSetExpire(String key, String value, Long time) {
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        valueOperations.set(key, value);
+        redisTemplate.expire(key, time, TimeUnit.SECONDS);
+    }
 
     public void saveHash(String key, String field, String value) {
         HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
@@ -49,6 +54,10 @@ public class RedisRepository {
         return hashOperations.get(key, field).toString();
     }
 
+    public Long decrement(String key, Long count) {
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        return valueOperations.decrement(key, count);
+    }
 
     /**
      * 만료시간 지정 메소드
@@ -62,5 +71,6 @@ public class RedisRepository {
     public Long getTimeToLive(String key) {
         return redisTemplate.getExpire(key);
     }
+
 
 }

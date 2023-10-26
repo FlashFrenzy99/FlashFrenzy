@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -44,7 +45,7 @@ class OrderRepositoryTest {
         List<Order> orders = orderRepository.saveAll(List.of(order1, order2));
 
         //when
-        List<Order> findOrders = orderRepository.findAllByUser(user);
+        Page<Order> findOrders = orderRepository.findAllByUser(user);
 
         //then
         Assertions.assertThat(orders).hasSize(2)

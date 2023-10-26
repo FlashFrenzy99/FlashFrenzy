@@ -12,11 +12,13 @@ public class OrderProductResponseDto {
     private String title;
     private Long count;
     private Long price;
+    private String status;
 
     public OrderProductResponseDto(OrderProduct orderProduct) {
         this.id = orderProduct.getId();
         this.title = orderProduct.getProduct().getTitle();
         this.count = orderProduct.getCount();
         this.price = orderProduct.getPrice();
+        this.status = orderProduct.getStatus().toString();
     }
 }
