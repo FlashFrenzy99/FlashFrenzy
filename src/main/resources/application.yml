@@ -41,7 +41,7 @@ spring:
       on-profile: local
 logging:
   level:
-    com.example.consumer: debug
+    com.example.flashfrenzy: debug
 
     org:
       hibernate:
