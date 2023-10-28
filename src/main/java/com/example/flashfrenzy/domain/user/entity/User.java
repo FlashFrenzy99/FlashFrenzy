@@ -44,6 +44,7 @@ public class User extends TimeStamp {
         this.password = password;
         this.role = role;
         this.email = email;
+        this.basket = basket;
         basket.setUser(this);
     }
 

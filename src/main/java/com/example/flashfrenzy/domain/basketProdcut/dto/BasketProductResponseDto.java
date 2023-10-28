@@ -4,7 +4,8 @@ import com.example.flashfrenzy.domain.basketProdcut.entity.BasketProduct;
 import lombok.Getter;
 
 @Getter
-public class BasketProductResponseDto {
+public class
+BasketProductResponseDto {
 
     private Long BasketProductId;
 
@@ -16,7 +17,6 @@ public class BasketProductResponseDto {
     private Long stock;
 
 
-
     public BasketProductResponseDto(BasketProduct basketProduct){
         this.BasketProductId = basketProduct.getId();
         this.title = basketProduct.getProduct().getTitle();
@@ -25,5 +25,16 @@ public class BasketProductResponseDto {
         this.category1 = basketProduct.getProduct().getCategory1();
         this.category2 = basketProduct.getProduct().getCategory2();
         this.stock = basketProduct.getCount();
+    }
+
+    public BasketProductResponseDto(BasketProduct basketProduct, int saleRate) {
+        this.BasketProductId = basketProduct.getId();
+        this.title = basketProduct.getProduct().getTitle();
+        this.image = basketProduct.getProduct().getImage();
+        this.price = basketProduct.getProduct().getPrice() * (100 - saleRate) / 100;
+        this.category1 = basketProduct.getProduct().getCategory1();
+        this.category2 = basketProduct.getProduct().getCategory2();
+        this.stock = basketProduct.getCount();
+
     }
 }

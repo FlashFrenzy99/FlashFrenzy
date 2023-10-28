@@ -1,17 +1,24 @@
+
 package com.example.flashfrenzy.domain.product.entity;
 
+import com.example.flashfrenzy.global.data.dto.ItemDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
 
 @Entity
 @Getter
 @NoArgsConstructor
+@Document(indexName = "product")
+@Table(name = "product", indexes = @Index(name = "idx_category1", columnList = "category1"))
 public class Product {
-
     @Id
     @Column(name = "product_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Field(name = "product_id")
+    @org.springframework.data.annotation.Id
     private Long id;
 
     @Column(name = "title", nullable = false)
@@ -29,13 +36,21 @@ public class Product {
     @Column(name = "category2", nullable = false)
     private String category2; // 중분류  ex) 하의, 상의
 
-    @Column(name = "stock", nullable = false)
-    private Long stock;
-
-    public void discountStock(Long stock) {
-        if (this.stock < stock) {
-            throw new IllegalArgumentException("재고가 남아있지 않습니다. 남은재고: "+ this.stock );
-        }
-        this.stock -= stock;
+    public Product(ItemDto itemDto) {
+        this.title = itemDto.getTitle();
+        this.image = itemDto.getImage();
+        this.price = itemDto.getPrice();
+        this.category1 = itemDto.getCategory1();
+        this.category2 = itemDto.getCategory2();
     }
+
+    public Product(Long id, String title, String image, Long price, String category1, String category2, Long stock) {
+        this.id = id;
+        this.title = title;
+        this.image = image;
+        this.price = price;
+        this.category1 = category1;
+        this.category2 = category2;
+    }
+
 }

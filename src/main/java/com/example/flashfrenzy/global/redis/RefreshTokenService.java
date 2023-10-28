@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
-@Slf4j
+@Slf4j(topic = "Refresh Token Redis API")
 @RequiredArgsConstructor
 public class RefreshTokenService {
 
@@ -24,12 +24,12 @@ public class RefreshTokenService {
      * @param userName 발급할 userName
      * @return refreshtoken key 값
      */
-    public String createRefreshToken(String userName, UserRoleEnum role) {
+    public String createRefreshToken(String userName, UserRoleEnum role, Long Bkey) {
 
         UUID uuid = UUID.randomUUID();
         String key = REFRESH_PREFIX + uuid;
 
-        RefreshToken refreshToken = new RefreshToken(userName, role);
+        RefreshToken refreshToken = new RefreshToken(userName, role, Bkey);
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String value = objectMapper.writeValueAsString(refreshToken);
@@ -47,12 +47,12 @@ public class RefreshTokenService {
         return redisRepository.getTimeToLive(key);
     }
 
-    public String refreshTokenRotation(String userName, UserRoleEnum role, Long time) {
+    public String refreshTokenRotation(String userName, UserRoleEnum role, Long time, Long Bkey) {
 
         UUID uuid = UUID.randomUUID();
         String key = REFRESH_PREFIX + uuid;
 
-        RefreshToken refreshToken = new RefreshToken(userName, role);
+        RefreshToken refreshToken = new RefreshToken(userName, role, Bkey);
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String value = objectMapper.writeValueAsString(refreshToken);

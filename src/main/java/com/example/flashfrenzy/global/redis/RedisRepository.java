@@ -2,6 +2,7 @@ package com.example.flashfrenzy.global.redis;
 
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Repository;
@@ -21,6 +22,22 @@ public class RedisRepository {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
         valueOperations.set(key, value);
     }
+    public void saveAndSetExpire(String key, String value, Long time) {
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        valueOperations.set(key, value);
+        redisTemplate.expire(key, time, TimeUnit.SECONDS);
+    }
+
+    public void saveHash(String key, String field, String value) {
+        HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
+        hashOperations.put(key, field, value);
+
+    }
+
+    public void saveHash(String key, String field, Integer value) {
+        HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
+        hashOperations.put(key, field, String.valueOf(value));
+    }
 
     /**
      * 키 벨류 조회 메소드
@@ -30,6 +47,16 @@ public class RedisRepository {
     public String getValue(String key) {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
         return valueOperations.get(key);
+    }
+
+    public String getHashFieldValue(String key, String field) {
+        HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
+        return hashOperations.get(key, field).toString();
+    }
+
+    public Long decrement(String key, Long count) {
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        return valueOperations.decrement(key, count);
     }
 
     /**
@@ -44,5 +71,6 @@ public class RedisRepository {
     public Long getTimeToLive(String key) {
         return redisTemplate.getExpire(key);
     }
+
 
 }

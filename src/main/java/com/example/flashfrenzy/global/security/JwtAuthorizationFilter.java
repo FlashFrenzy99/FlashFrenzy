@@ -27,13 +27,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
-
-
         if (req.getRequestURI().equals("/auth/users/sign-in") ||
                 req.getRequestURI().equals("/auth/users/sign-up") ||
                 req.getRequestURI().equals("/") ||
                 req.getRequestURI().equals("/health")) {
-            log.info("Pass Authorization : " + req.getRequestURI());
+            log.debug("Pass Authorization : " + req.getRequestURI());
             filterChain.doFilter(req, res);
             return;
         }
@@ -55,7 +53,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             try {
                 setAuthentication(info.getSubject());
             } catch (Exception e) {
-                log.error(e.getMessage());
+                log.error(e.toString());
                 return;
             }
         }
@@ -66,10 +64,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     // 인증 처리
     public void setAuthentication(String username) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
+
         Authentication authentication = createAuthentication(username);
+
         context.setAuthentication(authentication);
 
         SecurityContextHolder.setContext(context);
+
     }
 
     // 인증 객체 생성
