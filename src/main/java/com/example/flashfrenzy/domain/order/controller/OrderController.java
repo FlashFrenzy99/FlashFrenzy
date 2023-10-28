@@ -17,7 +17,7 @@ public class OrderController {
     public String orderBasketProducts(@PathVariable(value = "id") Long basketId) {
         long startTime = System.currentTimeMillis();
         orderService.orderBasketProducts(basketId);
-        log.info("장바구니 주문 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
+        log.debug("장바구니 주문 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
         //return "hello";
         return "redirect:/auth/users/my-page";
     }

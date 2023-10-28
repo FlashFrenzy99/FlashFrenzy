@@ -37,7 +37,7 @@ public class ProductController {
     public String getProducts(Model model,@PageableDefault(size = 15, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         long startTime = System.currentTimeMillis();
         Page<ProductResponseDto> productList = productService.getProducts(pageable);
-        log.info("상품 조회 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
+        log.debug("상품 조회 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
         model.addAttribute("productList", productList);
         return "product-list";
     }
@@ -50,7 +50,7 @@ public class ProductController {
                                  @PageableDefault(size = 15,sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
         long startTime = System.currentTimeMillis();
         Page<ProductResponseDto> productList = productService.searchProducts(query, pageable);
-        log.info("상품 검색 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
+        log.debug("상품 검색 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
         model.addAttribute("productList", productList);
         return "product-list";
     }
@@ -75,7 +75,7 @@ public class ProductController {
             model.addAttribute("productList", productList);
 
 
-        log.info("카테고리 검색 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
+        log.debug("카테고리 검색 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
         return "product-list";
     }
 }

@@ -32,7 +32,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 req.getRequestURI().equals("/auth/users/sign-up") ||
                 req.getRequestURI().equals("/") ||
                 req.getRequestURI().equals("/health")) {
-            log.info("Pass Authorization : " + req.getRequestURI());
+            log.debug("Pass Authorization : " + req.getRequestURI());
             filterChain.doFilter(req, res);
             return;
         }

@@ -3,6 +3,7 @@ package com.example.flashfrenzy.domain.orderProduct.entity;
 import com.example.flashfrenzy.domain.basketProdcut.entity.BasketProduct;
 import com.example.flashfrenzy.domain.order.entity.Order;
 import com.example.flashfrenzy.domain.product.entity.Product;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.awt.Menu;
 import lombok.Getter;
@@ -18,6 +19,7 @@ public class OrderProduct {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
