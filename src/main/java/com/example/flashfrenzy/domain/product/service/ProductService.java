@@ -76,12 +76,12 @@ public class ProductService {
 
 //        List<ProductResponseDto> productResponseDtoList = productRepository.findAllByCustomQueryAndStream(query, pageable).map(ProductResponseDto::new).toList();
 //        System.out.println("productResponseDtoList.size : "+ productResponseDtoList.size());
-//        log.info("기존 서치 elapsed time : " + (System.currentTimeMillis() - startTime) + "ms.");
+//        log.debug("기존 서치 elapsed time : " + (System.currentTimeMillis() - startTime) + "ms.");
 
 
         startTime = System.currentTimeMillis();
         Page<ProductResponseDto> productResponseDtoList = productSearchRepository.searchByTitle(query, pageable).map(ProductResponseDto::new);
-        log.info("엘라스틱 서치 elapsed time : " + (System.currentTimeMillis() - startTime) + "ms.");
+        log.debug("엘라스틱 서치 elapsed time : " + (System.currentTimeMillis() - startTime) + "ms.");
 
 
 //        return new PageImpl<>(productResponseDtoList.subList(start,end), pageRequest, productResponseDtoList.size());

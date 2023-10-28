@@ -57,7 +57,7 @@ public class NaverApiService {
                     .encode()
                     .build()
                     .toUri();
-            log.info("uri = " + uri);
+            log.debug("uri = " + uri);
 
             RequestEntity<Void> requestEntity = RequestEntity
                     .get(uri)
@@ -67,7 +67,7 @@ public class NaverApiService {
 
             ResponseEntity<String> responseEntity = restTemplate.exchange(requestEntity, String.class);
 
-            log.info("NAVER API Status Code : " + responseEntity.getStatusCode());
+            log.debug("NAVER API Status Code : " + responseEntity.getStatusCode());
 
             List<ItemDto> itemDtoList = fromJSONtoItems(responseEntity.getBody());
 
@@ -80,7 +80,7 @@ public class NaverApiService {
         }
         this.stockRepository.saveAll(stockList);
         this.productRepository.saveAll(productList);
-        log.info("elapsed time : " + (System.currentTimeMillis() - start) + "ms");
+        log.debug("elapsed time : " + (System.currentTimeMillis() - start) + "ms");
     }
 
     public List<ItemDto> fromJSONtoItems(String responseEntity) {
