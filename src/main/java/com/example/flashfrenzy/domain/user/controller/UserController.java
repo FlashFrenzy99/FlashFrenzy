@@ -54,9 +54,10 @@ public class UserController {
     public String myPage(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails
             ,@PageableDefault(size = 15, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-       List<OrderResponseDto> orders = userService.getOrders(userDetails.getUser(), pageable);
-       model.addAttribute("orders", orders);
-
-       return "my-page";
+        long startTime = System.currentTimeMillis();
+        List<OrderResponseDto> orders = userService.getOrders(userDetails.getUser(), pageable);
+        model.addAttribute("orders", orders);
+        log.debug("마이페이지 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
+        return "my-page";
     }
 }
