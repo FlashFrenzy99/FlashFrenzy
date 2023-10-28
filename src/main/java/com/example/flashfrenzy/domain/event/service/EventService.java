@@ -28,7 +28,7 @@ public class EventService {
     private final ObjectMapper objectMapper;
     private final StockRepository stockRepository;
 
-    public List<ProductResponseDto> getEventProductList() {
+    public List<ProductResponseDto> getEventProductList() throws Exception{
 
         /**/
         List<ProductResponseDto> productList = new ArrayList<>();
@@ -42,12 +42,10 @@ public class EventService {
                     String productString = redisRepository.getValue("product:sale:" + eventId);
                     if (productString != null) {
                         //캐시 hit
-                        try {
+
                             Product product = objectMapper.readValue(productString, Product.class);
                             productList.add(new ProductResponseDto(product, Long.parseLong(price), Long.parseLong(stock)));
-                        } catch (JsonProcessingException e) {
-                            throw new RuntimeException(e);
-                        }
+
                     } else {
                         //캐시 miss 시에 실제 db에서 데이터를 불러오기
                         Event event = eventRepository.findByProductId(eventId).orElseThrow();
