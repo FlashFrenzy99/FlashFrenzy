@@ -6,6 +6,7 @@ import com.example.flashfrenzy.global.security.JwtAuthorizationFilter;
 import com.example.flashfrenzy.global.security.UserDetailsServiceImpl;
 import com.example.flashfrenzy.global.util.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -36,7 +37,7 @@ public class WebSecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -65,7 +66,7 @@ public class WebSecurityConfig {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil,refreshTokenService);
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, refreshTokenService);
         filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
         return filter;
     }
@@ -90,10 +91,11 @@ public class WebSecurityConfig {
 
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
                         .requestMatchers("/", "/health", "/css/**", "/js/**", "/img/**", "/lib/**", "/scss/**").permitAll()
                         .requestMatchers("/auth/users/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
-                        .requestMatchers( "/swagger-resources/**","/swagger-ui/**", "/v3/api-docs/**").permitAll() // 스웨거
+                        .requestMatchers("/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll() // 스웨거
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
         http.formLogin((formLogin) -> {
