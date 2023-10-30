@@ -5,6 +5,7 @@ import com.example.flashfrenzy.domain.user.dto.SignupRequestDto;
 import com.example.flashfrenzy.domain.user.service.UserService;
 import com.example.flashfrenzy.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -21,6 +22,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/auth/users")
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
 
     private final UserService userService;
@@ -54,9 +56,10 @@ public class UserController {
     public String myPage(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails
             ,@PageableDefault(size = 15, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-       List<OrderResponseDto> orders = userService.getOrders(userDetails.getUser(), pageable);
-       model.addAttribute("orders", orders);
-
-       return "my-page";
+        long startTime = System.currentTimeMillis();
+        List<OrderResponseDto> orders = userService.getOrders(userDetails.getUser(), pageable);
+        model.addAttribute("orders", orders);
+        log.debug("마이페이지 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
+        return "my-page";
     }
 }

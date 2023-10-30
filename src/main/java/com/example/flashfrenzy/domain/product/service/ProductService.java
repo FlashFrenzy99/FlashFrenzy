@@ -133,13 +133,7 @@ public class ProductService {
             }
         }
 
-
         Set<Long> eventIdList = eventRepository.findProductIdSet();
-
-        
-
-        
-
         Page<Product> list = productRepository.findAllByCategory1(cate, pageable);
         List<ProductResponseDto> productResponseDtoList = list.stream().map(product -> {
             if (eventIdList.contains(product.getId())) {

@@ -21,7 +21,9 @@
             <span th:text="${product.title}"></span> <!-- OrderProductResponseDto의 필드 사용 -->
             <span th:text="${product.count}"></span>
             <span th:text="${product.price}"></span>
-            <span th:text="${product.status}"></span>
+            <span th:if="${product.status.toString().equals('SUCCESS')}">구매 완료된 상품</span>
+            <span th:if="${product.status.toString().equals('PENDING')}">구매 진행중</span>
+            <span th:if="${product.status.toString().equals('FAIL')}">구매 실패한 상품</span>
           </li>
         </ul>
       </td>

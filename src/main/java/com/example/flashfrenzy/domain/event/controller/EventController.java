@@ -22,7 +22,7 @@ public class EventController {
 
     //이벤트 발생
     @GetMapping("/api/event-page")
-    public String getEventPage(Model model) {
+    public String getEventPage(Model model) throws Exception {
 
         List<ProductResponseDto> productList = eventService.getEventProductList();
         model.addAttribute("productList", productList);
