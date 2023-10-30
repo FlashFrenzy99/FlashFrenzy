@@ -3,9 +3,10 @@
 <th:block th:fragment="headerFragment">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
     <script>
-        const host = 'http://' + window.location.host;
+        const host = 'https://' + window.location.host;
         function logout() {
             // 토큰 삭제
             console.log("logout 진입")
