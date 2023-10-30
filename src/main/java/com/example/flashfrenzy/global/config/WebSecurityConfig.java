@@ -98,9 +98,9 @@ public class WebSecurityConfig {
                         .requestMatchers("/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll() // 스웨거
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
-        http.formLogin((formLogin) -> {
-            formLogin.loginPage("/auth/users/sign-in-page").permitAll();
-        });
+//        http.formLogin((formLogin) -> {
+//            formLogin.loginPage("/auth/users/sign-in-page").permitAll();
+//        });
         // 필터 관리
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
