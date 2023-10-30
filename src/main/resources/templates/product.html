@@ -22,7 +22,7 @@
                     const token = getCookieValue('Authorization')
                     console.log(parseJwt(token))
                     const id = parseJwt(token)['basket']
-                    form.action = '/api/baskets/' + id;
+                    form.action = '//api/baskets/' + id;
                 });
             });
         });
