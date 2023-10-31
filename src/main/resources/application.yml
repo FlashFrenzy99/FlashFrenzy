@@ -36,6 +36,19 @@ server:
   error:
     include-exception: true
     include-stacktrace: always
+  tomcat:
+    mbeanregistry:
+      enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+  endpoint:
+    prometheus:
+      enabled: true
 
 ---
 spring:
