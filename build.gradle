@@ -16,6 +16,8 @@ repositories {
 }
 
 dependencies {
+    implementation 'io.micrometer:micrometer-registry-prometheus' // 프로메테우스
+    implementation 'io.prometheus:simpleclient_spring_boot:0.8.1'
     //Elastic search
     runtimeOnly 'com.h2database:h2'
     implementation 'org.springframework.data:spring-data-elasticsearch:4.2.2'
