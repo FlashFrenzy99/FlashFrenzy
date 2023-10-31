@@ -95,6 +95,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/", "/health", "/css/**", "/js/**", "/img/**", "/lib/**", "/scss/**").permitAll()
                         .requestMatchers("/auth/users/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll() // 스웨거
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
