@@ -13,4 +13,4 @@ COPY ${JAR_FILE} app.jar
 #COPY build/libs/*.jar app.jar
 
 # 실행 명령어
-ENTRYPOINT ["java", "-jar","-Dspring.profiles.active=prod", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "-Duser.timezone=Asia/Seoul", "-Dspring.profiles.active=prod", "/app.jar"]
