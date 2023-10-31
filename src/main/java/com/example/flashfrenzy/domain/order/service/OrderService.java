@@ -88,7 +88,7 @@ public class OrderService {
         orderProducer.createOrder(orderProductList);
 
         //주문 후 장바구니 내역 삭제
-        basketService.clearBasket(basket.getId());
+        // basketService.clearBasket(basket.getId());
 
     }
 }
