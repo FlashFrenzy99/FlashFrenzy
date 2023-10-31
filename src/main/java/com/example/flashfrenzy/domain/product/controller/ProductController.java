@@ -34,7 +34,8 @@ public class ProductController {
      * 상품 리스트 조회
      */
     @GetMapping
-    public String getProducts(Model model,@PageableDefault(size = 15, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public String getProducts(Model model,@PageableDefault(size = 15, sort = "id", direction = Sort.Direction.DESC) Pageable pageable)
+            throws JsonProcessingException {
         long startTime = System.currentTimeMillis();
         Page<ProductResponseDto> productList = productService.getProducts(pageable);
         log.debug("상품 조회 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
@@ -67,7 +68,8 @@ public class ProductController {
 
     @GetMapping("/category")
     public String categoryProduct(Model model, @RequestParam String cate,
-                                  @PageableDefault(size = 15, sort = "id", direction = Sort.Direction.ASC) Pageable pageable){
+                                  @PageableDefault(size = 15, sort = "id", direction = Sort.Direction.ASC) Pageable pageable)
+            throws JsonProcessingException {
         long startTime = System.currentTimeMillis();
 
         
