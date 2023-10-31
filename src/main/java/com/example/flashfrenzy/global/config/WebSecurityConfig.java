@@ -82,7 +82,7 @@ public class WebSecurityConfig {
         http.csrf((csrf) -> csrf.disable());
 
         //CORS 설정
-        http.cors((cors) -> cors.configurationSource(configurationSource()));
+//        http.cors((cors) -> cors.configurationSource(configurationSource()));
 
         // 기본 설정인 Session 방식은 사용하지 않고 JWT 방식을 사용하기 위한 설정
         http.sessionManagement((sessionManagement) ->
@@ -99,9 +99,9 @@ public class WebSecurityConfig {
                         .requestMatchers("/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll() // 스웨거
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
-//        http.formLogin((formLogin) -> {
-//            formLogin.loginPage("/auth/users/sign-in-page").permitAll();
-//        });
+        http.formLogin((formLogin) -> {
+            formLogin.loginPage("/auth/users/sign-in-page").permitAll();
+        });
         // 필터 관리
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

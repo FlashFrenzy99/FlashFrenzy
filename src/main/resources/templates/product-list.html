@@ -2,6 +2,7 @@
 <html xmlns:th="https://www.thymeleaf.org" xmlns:layout="https://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="layout/default_layout" lang="en">
 <th:block layout:fragment="content">
+    <link rel="icon" sizes="16x16" href="/favicon.ico">
     <script>
         function parseJwt(token) {
             var base64Url = token.split('.')[1];

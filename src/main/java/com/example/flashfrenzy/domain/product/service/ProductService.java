@@ -36,21 +36,35 @@ public class ProductService {
     private final ProductSearchRepository productSearchRepository;
     private final RedisRepository redisRepository;
     private final ObjectMapper objectMapper;
-    private final StockRepository stockRepository;
     @Transactional(readOnly = true)
-    public Page<ProductResponseDto> getProducts(Pageable pageable) {
+    public Page<ProductResponseDto> getProducts(Pageable pageable) throws JsonProcessingException {
         log.debug("상품 조회");
-        /*개선 이전*/
-//        List<Product> list = productRepository.findTop2000By();
-//        List<ProductResponseDto> productResponseDtoList = list.stream().map(product -> {
-//            Optional<Event> eventOptional = eventRepository.findById(product.getId());
-//            if (eventOptional.isPresent()) {
-//                Event event = eventOptional.get();
-//                return new ProductResponseDto(product, event.getSaleRate());
-//            } else {
-//                return new ProductResponseDto(product);
-//            }
-//        }).toList();
+
+        int pageNum = pageable.getPageNumber();
+        String value = redisRepository.getValue("main:" + pageNum);
+
+        if (pageNum < 15) {
+            if (value == null) {
+                Set<Long> eventIdList = eventRepository.findProductIdSet();
+                Stream<Product> list = productRepository.streamAllPaged(pageable);
+
+                List<ProductResponseDto> productResponseDtoList = list.map(product -> {
+                    if (eventIdList.contains(product.getId())) {
+                        Event event = eventRepository.findById(product.getId()).orElseThrow();
+                        return new ProductResponseDto(product, event.getSaleRate());
+                    } else {
+                        return new ProductResponseDto(product);
+                    }
+                }).toList();
+
+                value = objectMapper.writeValueAsString(productResponseDtoList);
+                redisRepository.save("main:" + pageNum, value);
+                return new PageImpl<>(productResponseDtoList);
+            } else {
+                return new PageImpl<>(Arrays.asList(objectMapper.readValue(value, ProductResponseDto[].class)));
+            }
+        }
+
 
 
         Set<Long> eventIdList = eventRepository.findProductIdSet();
@@ -99,7 +113,8 @@ public class ProductService {
         return new ProductResponseDto(product);
     }
 
-    public Page<ProductResponseDto> categoryProduct(String cate, Pageable pageable) {
+    public Page<ProductResponseDto> categoryProduct(String cate, Pageable pageable)
+            throws JsonProcessingException {
 
         int pageNum = pageable.getPageNumber();
         String value = redisRepository.getValue("category:" + cate + ":pagenum:" + pageNum);
@@ -116,20 +131,12 @@ public class ProductService {
                         return new ProductResponseDto(product);
                     }
                 }).toList();
-                try {
                     value = objectMapper.writeValueAsString(productResponseDtoList);
                     redisRepository.save("category:" + cate + ":pagenum:" + pageNum, value);
                     return new PageImpl<>(productResponseDtoList, pageable, list.getTotalElements());
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
-                }
             } else {
-                try {
                     Page<ProductResponseDto> productList = new PageImpl<>(Arrays.asList(objectMapper.readValue(value, ProductResponseDto[].class)));
                     return productList;
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
-                }
             }
         }
 
