@@ -44,7 +44,7 @@ server:
       min-spare: 10 # 항상 활성화 되어있는(idle) thread의 개수
     max-connections: 10010 # 수립가능한 connection의 총 개수
     accept-count: 100 # 작업큐의 사이즈
-    connection-timeout: 20000 # timeout 판단 기준 시간, 20초
+#    connection-timeout: 20000 # timeout 판단 기준 시간, 20초
 
 management:
   endpoints:
@@ -77,6 +77,12 @@ spring:
   config:
     activate:
       on-profile: prod
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        show_sql: false
 ---
 spring:
   main:
