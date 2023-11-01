@@ -23,6 +23,8 @@
                     const token = getCookieValue('Authorization')
                     const id = parseJwt(token)['basket']
                     form.action = '/api/orders/' + id;
+                    alert("구매 완료")
+                    window.location.reload();
                 });
             });
         });
