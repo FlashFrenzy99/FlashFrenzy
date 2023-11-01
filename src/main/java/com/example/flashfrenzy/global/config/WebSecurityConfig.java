@@ -1,6 +1,5 @@
 package com.example.flashfrenzy.global.config;
 
-import com.example.flashfrenzy.domain.user.entity.UserRoleEnum;
 import com.example.flashfrenzy.global.redis.RefreshTokenService;
 import com.example.flashfrenzy.global.security.JwtAuthenticationFilter;
 import com.example.flashfrenzy.global.security.JwtAuthorizationFilter;
@@ -97,7 +96,6 @@ public class WebSecurityConfig {
                         .requestMatchers("/auth/users/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
-                        .requestMatchers("/api/orders/**").hasRole(String.valueOf(UserRoleEnum.USER))
                         .requestMatchers("/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll() // 스웨거
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
