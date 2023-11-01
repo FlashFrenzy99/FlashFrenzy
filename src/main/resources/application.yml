@@ -74,6 +74,12 @@ spring:
   config:
     activate:
       on-profile: prod
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        show_sql: false
 ---
 spring:
   main:
