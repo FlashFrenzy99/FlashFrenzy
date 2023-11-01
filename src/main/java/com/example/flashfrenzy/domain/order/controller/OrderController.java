@@ -18,8 +18,8 @@ public class OrderController {
         long startTime = System.currentTimeMillis();
         orderService.orderBasketProducts(basketId);
         log.debug("장바구니 주문 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
-        //return "hello";
-        return "redirect:/auth/users/my-page";
+        return "redirect:/api/baskets";
+
     }
 
 
