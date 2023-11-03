@@ -88,7 +88,7 @@ jobs:
         --application-name flashfrenzy \
         --deployment-group-name flashfrenzy-deployment-group \
         --deployment-config-name CodeDeployDefault.AllAtOnce \
-        --s3-location bucket=${{ secrets.S3_BUCKET_NAME }},key=flashfrenzy.zip,bundleType=zip \
+        # --s3-location bucket=${{ secrets.S3_BUCKET_NAME }},key=flashfrenzy.zip,bundleType=zip \
         --region ap-northeast-2
 
 #  deploy:
