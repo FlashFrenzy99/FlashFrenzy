@@ -54,8 +54,15 @@ jobs:
     - name: Copy appspec.yml
       run: cp appspec.yml ./deploy
     # script files 복사
-    - name: Copy script
-      run: cp ./scripts/*.sh ./deploy
+    - name: make script
+      run: |
+        touch scripts/deploy.sh
+        echo "sudo docker pull ${{ secrets.DOCKER_USERNAME }}/ff:latest" >> scripts/deploy.sh
+        echo "sudo docker stop $(sudo docker ps -a -q)" >> scripts/deploy.sh
+        echo "sudo docker run -d --log-driver=syslog -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/ff:latest" >> scripts/deploy.sh
+        echo "sudo docker rm $(sudo docker ps --filter 'status=exited' -a -q)" >> scripts/deploy.sh
+        echo "sudo docker image prune -a -f" >> scripts/deploy.sh
+        cp ./scripts/*.sh ./deploy
     # deploy 폴더 파일 zip 압축
     - name: Make zip file
       run: zip -r ./flashfrenzy.zip ./deploy
@@ -79,8 +86,7 @@ jobs:
         aws deploy create-deployment \
         --application-name flashfrenzy \
         --deployment-group-name flashfrenzy-deployment-group \
-        --deployment-config-name CodeDeployDefault.HalfAtOnce \
-        --file-exists-behavior OVERWRITE \
+        --deployment-config-name CodeDeployDefault.AllAtOnce \
         --s3-location bucket=${{ secrets.S3_BUCKET_NAME }},key=flashfrenzy.zip,bundleType=zip \
         --region ap-northeast-2
 
