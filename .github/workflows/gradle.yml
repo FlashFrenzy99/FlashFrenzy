@@ -55,13 +55,16 @@ jobs:
       run: cp appspec.yml ./deploy
     # script files 복사
     - name: make script
+      env:
+        STOP: $(sudo docker ps -a -q)
+        RM: $(sudo docker ps --filter 'status=exited' -a -q)
       run: |
         mkdir scripts
         touch scripts/deploy.sh
         echo "sudo docker pull ${{ secrets.DOCKER_USERNAME }}/ff:latest" >> scripts/deploy.sh
-        echo "sudo docker stop $(sudo docker ps -a -q)" >> scripts/deploy.sh
+        echo "sudo docker stop $STOP" >> scripts/deploy.sh
         echo "sudo docker run -d --log-driver=syslog -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/ff:latest" >> scripts/deploy.sh
-        echo "sudo docker rm $(sudo docker ps --filter 'status=exited' -a -q)" >> scripts/deploy.sh
+        echo "sudo docker rm $RM" >> scripts/deploy.sh
         echo "sudo docker image prune -a -f" >> scripts/deploy.sh
         cp ./scripts/*.sh ./deploy
     # deploy 폴더 파일 zip 압축
@@ -83,13 +86,12 @@ jobs:
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        3S_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
       run: |
         aws deploy create-deployment \
         --application-name flashfrenzy \
         --deployment-group-name flashfrenzy-deployment-group \
         --deployment-config-name CodeDeployDefault.AllAtOnce \
-        --s3-location bucket=$3S_BUCKET_NAME,key=flashfrenzy.zip,bundleType=zip
+        --s3-location bucket=${{ secrets.S3_BUCKET_NAME }},key=flashfrenzy.zip,bundleType=zip
 
 #  deploy:
 #    runs-on: ubuntu-latest
