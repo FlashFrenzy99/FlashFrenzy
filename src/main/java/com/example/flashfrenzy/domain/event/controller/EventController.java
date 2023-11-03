@@ -21,7 +21,7 @@ public class EventController {
     private final EventService eventService;
 
     //이벤트 발생
-    @GetMapping("/api/event-page")
+    @GetMapping("/api/products/event-page")
     public String getEventPage(Model model) throws Exception {
 
         List<ProductResponseDto> productList = eventService.getEventProductList();
