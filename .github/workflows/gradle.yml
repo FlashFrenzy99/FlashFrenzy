@@ -79,7 +79,7 @@ jobs:
         aws deploy create-deployment \
         --application-name flashfrenzy \
         --deployment-group-name flashfrenzy-deployment-group \
-        --deployment-config-name CodeDeployDefault.HalfAtTime \
+        --deployment-config-name CodeDeployDefault.HalfAtATime \
         --file-exists-behavior OVERWRITE \
         --s3-location bucket=${{ secrets.S3_BUCKET_NAME }},key=flashfrenzy.zip,bundleType=zip \
         --region ap-northeast-2
