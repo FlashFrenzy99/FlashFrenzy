@@ -11,10 +11,10 @@
         function logout() {
             // 토큰 삭제
             console.log("logout 진입")
-            document.cookie.split(";").forEach(function (c) {
-                document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
-            });
-            window.location.href = host + '/auth/users/sign-in-page';
+            // document.cookie.split(";").forEach(function (c) {
+            //     document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+            // });
+            window.location.href = host + '/auth/users/logout';
         }
 
         const getCookieValue = (key) => {
