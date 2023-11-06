@@ -5,6 +5,7 @@ import com.example.flashfrenzy.global.security.JwtAuthenticationFilter;
 import com.example.flashfrenzy.global.security.JwtAuthorizationFilter;
 import com.example.flashfrenzy.global.security.UserDetailsServiceImpl;
 import com.example.flashfrenzy.global.util.jwt.JwtUtil;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -98,7 +99,22 @@ public class WebSecurityConfig {
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll() // 스웨거
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
+
         );
+        http.logout()
+                .logoutUrl("/auth/users/logout")   // 로그아웃 처리 URL (= form action url)
+                .logoutSuccessUrl("/") // 로그아웃 성공 후 targetUrl,
+                .addLogoutHandler((request, response, authentication) -> {
+                    HttpSession session = request.getSession();
+                    if (session != null) {
+                        session.invalidate();
+                    }
+                })  // 로그아웃 핸들러 추가
+                .logoutSuccessHandler((request, response, authentication) -> {
+                    response.sendRedirect("/");
+                }) // 로그아웃 성공 핸들러
+                .deleteCookies("Authorization", "remember-me", "Refresh"); // 로그아웃 후 삭제할 쿠키 지정
+
         http.formLogin((formLogin) -> {
             formLogin.loginPage("/auth/users/sign-in-page").permitAll();
         });
@@ -106,5 +122,9 @@ public class WebSecurityConfig {
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
+
+
+
+
     }
 }
