@@ -159,7 +159,7 @@ public class ProductService {
 
         List<ProductRankDto> productRankList = new ArrayList<>();
         for (int i = 1; i <= 5; i++) {
-            String value = redisRepository.getValue("product:rank" + i);
+            String value = redisRepository.getValue("product:rank:" + i);
             if (value != null) {
                 try {
                     ProductRankDto productRankDto = objectMapper.readValue(value,

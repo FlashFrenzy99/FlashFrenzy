@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org" xmlns:layout="https://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="layout/default_layout" lang="en">
+
 <th:block layout:fragment="content">
     <link rel="icon" sizes="16x16" href="/favicon.ico">
     <script>
+
         function parseJwt(token) {
             var base64Url = token.split('.')[1];
             var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -29,50 +31,94 @@
         });
 
     </script>
+    <style>
+        .table-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .product-list, .rank-list {
+            flex: 1;
+        }
+
+        .product-list table, .rank-list table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .product-list th, .product-list td, .rank-list th, .rank-list td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .product-list th, .rank-list th {
+            background-color: #f2f2f2;
+        }
+    </style>
     <h1>Product List</h1>
-    <table>
-        <thead>
-        <tr>
-            <th>Title</th>
-            <th>Image</th>
-            <th>Price</th>
-            <th>대분류</th>
-            <th>중분류</th>
-            <!--            <th>Stock</th>-->
-            <th>Total : <span th:text="${productList.getTotalElements()}">0</span></th>
-        </tr>
-        </thead>
-        <tbody>
-        <!-- Iterate through the productList and display each product -->
-        <tr th:each="product : ${productList}" th:onclick="|location.href='@{/api/products/{id}(id=${product.id})}'|" style="cursor: pointer;">
-            <td th:text="${product.title}"></td>
-            <td>
-                <img th:src="${product.image}" width="100" height="120">
-            </td>
-            <td th:text="${product.price}"></td>
-            <td th:text="${product.category1}"></td>
-            <td th:text="${product.category2}"></td>
-            <td th:text="${product.stock}"></td>
-        </tr>
+    <div class="table-container">
+        <div>
+            <table class="product-list">
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Image</th>
+                    <th>Price</th>
+                    <th>대분류</th>
+                    <th>중분류</th>
+                    <!--            <th>Stock</th>-->
+                    <th>Total : <span th:text="${productList.getTotalElements()}">0</span></th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Iterate through the productList and display each product -->
+                <tr th:each="product : ${productList}"
+                    th:onclick="|location.href='@{/api/products/{id}(id=${product.id})}'|"
+                    style="cursor: pointer;">
+                    <td th:text="${product.title}"></td>
+                    <td>
+                        <img th:src="${product.image}" width="100" height="120">
+                    </td>
+                    <td th:text="${product.price}"></td>
+                    <td th:text="${product.category1}"></td>
+                    <td th:text="${product.category2}"></td>
+                    <td th:text="${product.stock}"></td>
+                </tr>
 
-        <!--        <tr th:each="product : ${productList}" th:href="@{/api/products/{id}(id=${product.id})}">-->
-<!--            <td th:text="${product.title}"></td>-->
-<!--            <td><a th:href="@{/api/products/{id}(id=${product.id})}">-->
-<!--                <img th:src="${product.image}" width="100" height="120">-->
-<!--            </a>-->
-<!--            </td>-->
-<!--            <td th:text="${product.price}"></td>-->
-<!--            <td th:text="${product.category1}"></td>-->
-<!--            <td th:text="${product.category2}"></td>-->
-<!--            <td th:text="${product.stock}"></td>-->
-<!--        </tr>-->
 
-        </tbody>
-    </table>
+                <!--        <tr th:each="product : ${productList}" th:href="@{/api/products/{id}(id=${product.id})}">-->
+                <!--            <td th:text="${product.title}"></td>-->
+                <!--            <td><a th:href="@{/api/products/{id}(id=${product.id})}">-->
+                <!--                <img th:src="${product.image}" width="100" height="120">-->
+                <!--            </a>-->
+                <!--            </td>-->
+                <!--            <td th:text="${product.price}"></td>-->
+                <!--            <td th:text="${product.category1}"></td>-->
+                <!--            <td th:text="${product.category2}"></td>-->
+                <!--            <td th:text="${product.stock}"></td>-->
+                <!--        </tr>-->
 
-    <div th:unless="${productList}">
-        <p>상품이 존재하지 않습니다.</p>
+                </tbody>
+            </table>
+            <div th:unless="${productList}">
+                <p>상품이 존재하지 않습니다.</p>
+            </div>
+        </div>
+        <div class="rank-list" th:if="${not #lists.isEmpty(productRankList)}">
+            <table>
+                <tr>
+                    <th>Rank</th>
+                    <th>Title</th>
+                </tr>
+                <tr th:each="product, status : ${productRankList}" th:onclick="|location.href='@{/api/products/{id}(id=${product.id})}'|" style="cursor: pointer;">
+                    <td th:text="${status.index + 1}"></td>
+                    <td th:text="${product.getTitle()}"></td>
+                </tr>
+            </table>
+        </div>
+
+
     </div>
-
 </th:block>
 </html>

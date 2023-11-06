@@ -7,12 +7,16 @@
 
     <script>
         const host = 'https://' + window.location.host;
+
         function logout() {
             // 토큰 삭제
             console.log("logout 진입")
-            document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
+            document.cookie.split(";").forEach(function (c) {
+                document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+            });
             window.location.href = host + '/auth/users/sign-in-page';
         }
+
         const getCookieValue = (key) => {
             const cookies = document.cookie.split('; ').reduce((acc, cookie) => {
                 const [k, v] = cookie.split('=');
@@ -21,105 +25,118 @@
             }, {});
 
             return cookies[key] || null;
-        };
-        $(document).ready(function () {
+        }
 
-            if(getCookieValue('Authorization')!=null){
+        $(document).ready(function () {
+            if (getCookieValue('Authorization') != null) {
                 $('#sign-in').hide()
                 $('#sign-up').hide()
-            }else{
+            } else {
                 $('#my-page').hide()
                 $('#log-out').hide()
             }
         })
     </script>
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>FlashFrenzy</title>
-        <style>
-            /* 스타일링을 위한 CSS */
-            body {
-                font-family: Arial, sans-serif;
-            }
+    <style>
+        /* 스타일링을 위한 CSS */
+        .navbar {
+            background-color: #333;
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+        }
 
-            .navbar {
-                background-color: #333;
-                overflow: hidden;
-            }
+        .navbar a {
+            font-size: 16px;
+            color: white;
+            text-decoration: none;
+            margin-left: 10px;
+        }
 
-            .navbar a {
-                float: right;
-                font-size: 16px;
-                color: white;
-                text-align: center;
-                padding: 14px 16px;
-                text-decoration: none;
-            }
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
 
-            .navbar a:hover {
-                background-color: #ddd;
-                color: black;
-            }
+        .logo img {
+            width: 40px;
+            height: 40px;
+        }
 
-            .logo {
-                float: left;
-                padding: 10px;
-            }
-        </style>
-        <div class="navbar">
-            <div class="logo">
-                <a href="/"><img
-                        src="https://th.bing.com/th?q=%ec%a7%91+%ec%95%84%ec%9d%b4%ec%bd%98&w=120&h=120&c=1&rs=1&qlt=90&cb=1&pid=InlineBlock&mkt=ko-KR&cc=KR&setlang=ko&adlt=strict&t=1&mw=247"
-                        alt="로고" width="40" height="40"></a>
-            </div>
+        .right-links {
+            display: flex;
+            align-items: center;
+        }
+
+        #search-input {
+            margin-left: auto;
+            margin-right: 10px;
+            display: flex;
+            justify-content: right;
+        }
+
+        #query {
+            margin-right: 10px;
+        }
+
+        #search-input input[type="text"] {
+            width: 200px;
+            padding: 5px;
+            border: 1px solid #ddd;
+        }
+
+        #shortcutArea ul {
+            display: flex;
+            list-style: none;
+            padding: 0;
+        }
+
+        #shortcutArea ul li {
+            margin-right: 10px;
+        }
+    </style>
+    <div class="navbar">
+        <div class="logo">
+            <a href="/"><img
+                    src="https://th.bing.com/th?q=%ec%a7%91+%ec%95%84%ec%9d%b4%ec%bd%98&w=120&h=120&c=1&rs=1&qlt=90&cb=1&pid=InlineBlock&mkt=ko-KR&cc=KR&setlang=ko&adlt=strict&t=1&mw=247"
+                    alt="로고"></a>
+        </div>
+        <div class="right-links">
             <a href="/auth/users/sign-up-page" id="sign-up">회원가입</a>
             <a href="/auth/users/sign-in-page" id="sign-in">로그인</a>
             <a id="log-out" onclick="logout()">로그아웃</a>
             <a href="/auth/users/my-page" id="my-page">마이페이지</a>
             <a href="/api/baskets">장바구니</a>
         </div>
-        <div>
-            <form id="search-input" action="/api/products/search" method="get">
-                <input type="text" id="query" name="query" required>
-                <input type="submit" value="검색하기">
-            </form>
-        </div>
-        <div id="shortcutArea" role="region">
-            <ul class>
-                <li>
-                    <a href="/api/products/category?cate=디지털/가전">디지털/가전</a>
-                </li>
-                <li>
-                    <a href="/api/products/category?cate=패션의류">패션의류 </a>
-                </li>
-                <li>
-                    <a href="/api/products/category?cate=패션잡화">패션잡화</a>
-                </li>
-                <li>
-                    <a href="/api/products/category?cate=화장품/미용">화장품/미용</a>
-                </li>
-                <li>
-                    <a href="/api/products/category?cate=식품">식품</a>
-                </li>
-                <li>
-                    <a href="/api/products/category?cate=스포츠/레저">스포츠/레저</a>
-                </li>
-                <li>
-                    <a href="/api/products/category?cate=가구/인테리어">가구/인테리어</a>
-                </li>
-                <li>
-                    <a href="/api/products/category?cate=생활/건강">생활/건강</a>
-                </li>
-                <li>
-                    <a href="/api/products/category?cate=출산/육아">출산/육아</a>
-                </li>
-                <li>
-                    <a href="/api/products/category?cate=여가/생활편의">여가/생활편의</a>
-                </li>
-            </ul>
-        </div>
-    </head>
+    </div>
+    <div>
+        <table>
+            <tr>
+                <td><a href="/api/products/event-page"></a> </td>
+            </tr>
+        </table>
+        <form id="search-input" action="/api/products/search" method="get">
+            <input type="text" id="query" name="query" required placeholder="상품 명을 입력해주세요">
+            <input type="submit" value="검색하기">
+        </form>
+    </div>
+    <h3>Category</h3>
+    <div id="shortcutArea" role="region">
+        <ul>
+            <li><a href="/api/products/category?cate=디지털/가전">디지털/가전</a></li>
+            <li><a href="/api/products/category?cate=패션의류">패션의류</a></li>
+            <li><a href="/api/products/category?cate=패션잡화">패션잡화</a></li>
+            <li><a href="/api/products/category?cate=화장품/미용">화장품/미용</a></li>
+            <li><a href="/api/products/category?cate=식품">식품</a></li>
+            <li><a href="/api/products/category?cate=스포츠/레저">스포츠/레저</a></li>
+            <li><a href="/api/products/category?cate=가구/인테리어">가구/인테리어</a></li>
+            <li><a href="/api/products/category?cate=생활/건강">생활/건강</a></li>
+            <li><a href="/api/products/category?cate=출산/육아">출산/육아</a></li>
+            <li><a href="/api/products/category?cate=여가/생활편의">여가/생활편의</a></li>
+        </ul>
+    </div>
 </th:block>
 </html>
