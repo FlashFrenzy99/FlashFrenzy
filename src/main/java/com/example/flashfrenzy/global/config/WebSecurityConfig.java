@@ -102,7 +102,7 @@ public class WebSecurityConfig {
 
         );
         http.logout()
-                .logoutUrl("/logout")   // 로그아웃 처리 URL (= form action url)
+                .logoutUrl("/auth/users/logout")   // 로그아웃 처리 URL (= form action url)
                 .logoutSuccessUrl("/") // 로그아웃 성공 후 targetUrl,
                 .addLogoutHandler((request, response, authentication) -> {
                     HttpSession session = request.getSession();
