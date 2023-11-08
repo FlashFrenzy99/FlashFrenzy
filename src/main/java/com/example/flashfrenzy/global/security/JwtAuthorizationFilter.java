@@ -19,14 +19,14 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @Slf4j(topic = "JWT 검증 및 인가")
 @RequiredArgsConstructor
-//authfilter,loggingfilter 대신 편리하게 사용
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res,
+            FilterChain filterChain) throws ServletException, IOException {
         if (req.getRequestURI().startsWith("/auth/users/sign") ||
                 req.getRequestURI().equals("/") ||
                 req.getRequestURI().startsWith("/api/products") ||
@@ -45,7 +45,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             accessTokenValue = jwtUtil.substringToken(accessTokenValue);
 
             //access토큰이 유효하면 그대로 반환, 만료되어 refresh토큰 통해 반환되면 새로운 토큰 발급
-            String token = jwtUtil.validateToken(accessTokenValue, refreshTokenValue,res);
+            String token = jwtUtil.validateToken(accessTokenValue, refreshTokenValue, res);
             accessTokenValue = token;
 
             Claims info = jwtUtil.getUserInfoFromToken(accessTokenValue);
@@ -57,25 +57,21 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 return;
             }
         }
-
         filterChain.doFilter(req, res);
     }
 
     // 인증 처리
     public void setAuthentication(String username) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
-
         Authentication authentication = createAuthentication(username);
-
         context.setAuthentication(authentication);
-
         SecurityContextHolder.setContext(context);
-
     }
 
     // 인증 객체 생성
     private Authentication createAuthentication(String username) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, null,
+                userDetails.getAuthorities());
     }
 }

@@ -4,8 +4,16 @@ import com.example.flashfrenzy.domain.basketProdcut.entity.BasketProduct;
 import com.example.flashfrenzy.domain.order.entity.Order;
 import com.example.flashfrenzy.domain.product.entity.Product;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import java.awt.Menu;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -36,14 +44,13 @@ public class OrderProduct {
     @Enumerated(value = EnumType.STRING)
     private StatusEnum status = StatusEnum.PENDING;
 
-
     public OrderProduct(BasketProduct basketProduct) {
         this.product = basketProduct.getProduct();
         this.count = basketProduct.getCount();
         this.price = basketProduct.getProduct().getPrice();
     }
 
-    public OrderProduct(BasketProduct basketProduct,int saleRate) {
+    public OrderProduct(BasketProduct basketProduct, int saleRate) {
         this.product = basketProduct.getProduct();
         this.count = basketProduct.getCount();
         this.price = basketProduct.getProduct().getPrice() * (100 - saleRate) / 100;

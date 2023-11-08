@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-//    @ExceptionHandler(Exception.class)
-//    public String ExHandler(Exception ex) {
-//        log.error(ex.toString());
-//        ex.printStackTrace();
-//        return "redirect:/";
-//    }
+    @ExceptionHandler(Exception.class)
+    public String ExHandler(Exception ex) {
+        log.error(ex.toString());
+        ex.printStackTrace();
+        return "error/404";
+    }
 }

@@ -8,6 +8,8 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 
 @EnableElasticsearchRepositories
-public interface ProductSearchRepository extends ElasticsearchRepository<Product,Long> , CustomProductSearchRepository {
+public interface ProductSearchRepository extends ElasticsearchRepository<Product, Long>,
+        CustomProductSearchRepository {
+
     Page<Product> searchByTitle(String title, Pageable pageable);
 }

@@ -7,10 +7,14 @@ import com.example.flashfrenzy.domain.product.dto.ProductResponseDto;
 import com.example.flashfrenzy.domain.product.entity.Product;
 import com.example.flashfrenzy.domain.product.repository.ProductRepository;
 import com.example.flashfrenzy.domain.product.repository.ProductSearchRepository;
-import com.example.flashfrenzy.domain.stock.repository.StockRepository;
 import com.example.flashfrenzy.global.redis.RedisRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -19,15 +23,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Stream;
-
 @Service
 @RequiredArgsConstructor
-//@Transactional(readOnly = true)
 @Slf4j(topic = "Product API")
 public class ProductService {
 
@@ -36,6 +33,7 @@ public class ProductService {
     private final ProductSearchRepository productSearchRepository;
     private final RedisRepository redisRepository;
     private final ObjectMapper objectMapper;
+
     @Transactional(readOnly = true)
     public Page<ProductResponseDto> getProducts(Pageable pageable) throws JsonProcessingException {
         log.debug("상품 조회");
@@ -61,11 +59,10 @@ public class ProductService {
                 redisRepository.save("main:" + pageNum, value);
                 return new PageImpl<>(productResponseDtoList);
             } else {
-                return new PageImpl<>(Arrays.asList(objectMapper.readValue(value, ProductResponseDto[].class)));
+                return new PageImpl<>(
+                        Arrays.asList(objectMapper.readValue(value, ProductResponseDto[].class)));
             }
         }
-
-
 
         Set<Long> eventIdList = eventRepository.findProductIdSet();
 
@@ -84,22 +81,13 @@ public class ProductService {
 
     public Page<ProductResponseDto> searchProducts(String query, Pageable pageable) {
         log.debug("상품 검색");
-//        Stream<Product> productList = productRepository.findAllByTitleContainsAndStream(query, pageable);
-//        List<ProductResponseDto> productResponseDtoList = productList.map(ProductResponseDto::new).toList();
         long startTime = System.currentTimeMillis();
 
-//        List<ProductResponseDto> productResponseDtoList = productRepository.findAllByCustomQueryAndStream(query, pageable).map(ProductResponseDto::new).toList();
-//        System.out.println("productResponseDtoList.size : "+ productResponseDtoList.size());
-//        log.debug("기존 서치 elapsed time : " + (System.currentTimeMillis() - startTime) + "ms.");
-
-
         startTime = System.currentTimeMillis();
-        Page<ProductResponseDto> productResponseDtoList = productSearchRepository.searchByTitle(query, pageable).map(ProductResponseDto::new);
+        Page<ProductResponseDto> productResponseDtoList = productSearchRepository.searchByTitle(
+                query, pageable).map(ProductResponseDto::new);
         log.debug("엘라스틱 서치 elapsed time : " + (System.currentTimeMillis() - startTime) + "ms.");
 
-
-//        return new PageImpl<>(productResponseDtoList.subList(start,end), pageRequest, productResponseDtoList.size());
-        //return new PageImpl<>(productResponseDtoList2);
         return productResponseDtoList;
     }
 
@@ -131,12 +119,13 @@ public class ProductService {
                         return new ProductResponseDto(product);
                     }
                 }).toList();
-                    value = objectMapper.writeValueAsString(productResponseDtoList);
-                    redisRepository.save("category:" + cate + ":pagenum:" + pageNum, value);
-                    return new PageImpl<>(productResponseDtoList, pageable, list.getTotalElements());
+                value = objectMapper.writeValueAsString(productResponseDtoList);
+                redisRepository.save("category:" + cate + ":pagenum:" + pageNum, value);
+                return new PageImpl<>(productResponseDtoList, pageable, list.getTotalElements());
             } else {
-                    Page<ProductResponseDto> productList = new PageImpl<>(Arrays.asList(objectMapper.readValue(value, ProductResponseDto[].class)));
-                    return productList;
+                Page<ProductResponseDto> productList = new PageImpl<>(
+                        Arrays.asList(objectMapper.readValue(value, ProductResponseDto[].class)));
+                return productList;
             }
         }
 
