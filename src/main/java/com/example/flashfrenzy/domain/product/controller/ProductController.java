@@ -32,6 +32,7 @@ public class ProductController {
         Page<ProductResponseDto> productList = productService.getProducts(pageable);
         log.debug("상품 조회 elapsed time : " + (System.currentTimeMillis() - startTime) + "ms.");
         model.addAttribute("productList", productList);
+        model.addAttribute("currentPage", pageable.getPageNumber());
         return "product-list";
     }
 
@@ -42,6 +43,8 @@ public class ProductController {
         Page<ProductResponseDto> productList = productService.searchProducts(query, pageable);
         log.debug("상품 검색 elapsed time : " + (System.currentTimeMillis() - startTime) + "ms.");
         model.addAttribute("productList", productList);
+        model.addAttribute("currentPage", pageable.getPageNumber());
+        model.addAttribute("query", query);
         return "product-list";
     }
 
@@ -60,6 +63,8 @@ public class ProductController {
 
         Page<ProductResponseDto> productList = productService.categoryProduct(cate, pageable);
         model.addAttribute("productList", productList);
+        model.addAttribute("currentPage", pageable.getPageNumber());
+        model.addAttribute("cate", cate);
 
         log.debug("카테고리 검색 elapsed time : " + (System.currentTimeMillis() - startTime) + "ms.");
         return "product-list";

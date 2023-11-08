@@ -34,6 +34,7 @@ public class HomeController {
         log.debug("홈화면 조회 elapsed time : " + (System.currentTimeMillis() - startTime) + "ms.");
         model.addAttribute("productList", productList);
         model.addAttribute("productRankList", productRankList);
+        model.addAttribute("currentPage", pageable.getPageNumber());
         return "product-list";
     }
 
