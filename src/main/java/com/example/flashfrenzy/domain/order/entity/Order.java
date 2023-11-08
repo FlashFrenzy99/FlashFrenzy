@@ -47,14 +47,7 @@ public class Order extends TimeStamp {
 
     public void addOrderProduct(OrderProduct orderProduct) {
 
-        if (orderProduct.getStatus() == StatusEnum.SUCCESS) {
-            addTotalPrice(orderProduct.getPrice() * orderProduct.getCount());
-        }
         this.orderProductList.add(orderProduct);
         orderProduct.addOrder(this);
-    }
-
-    private void addTotalPrice(Long price) {
-        this.totalPrice += price;
     }
 }

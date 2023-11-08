@@ -24,7 +24,7 @@ public class OrderResponseDto {
         this.totalPrice = 0L;
         for (OrderProduct orderProduct : order.getOrderProductList()) {
             if (orderProduct.getStatus() == StatusEnum.SUCCESS) {
-                this.totalPrice += orderProduct.getPrice();
+                this.totalPrice += orderProduct.getPrice() * orderProduct.getCount();
             }
         }
     }
