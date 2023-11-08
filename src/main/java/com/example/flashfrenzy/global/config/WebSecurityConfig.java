@@ -112,9 +112,9 @@ public class WebSecurityConfig {
                 }) // 로그아웃 성공 핸들러
                 .deleteCookies("Authorization", "remember-me", "Refresh"); // 로그아웃 후 삭제할 쿠키 지정
 
-        http.formLogin((formLogin) -> {
-            formLogin.loginPage("/auth/users/sign-in-page").permitAll();
-        });
+//        http.formLogin((formLogin) -> {
+//            formLogin.loginPage("/auth/users/sign-in-page").permitAll();
+//        });
         // 필터 관리
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
