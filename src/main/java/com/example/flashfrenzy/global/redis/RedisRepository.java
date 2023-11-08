@@ -15,13 +15,15 @@ public class RedisRepository {
 
     /**
      * key-value 저장 메소드
-     * @param key 저장하려는 key 값
+     *
+     * @param key   저장하려는 key 값
      * @param value 저장하려는 value 값
      */
     public void save(String key, String value) {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
         valueOperations.set(key, value);
     }
+
     public void saveAndSetExpire(String key, String value, Long time) {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
         valueOperations.set(key, value);
@@ -41,6 +43,7 @@ public class RedisRepository {
 
     /**
      * 키 벨류 조회 메소드
+     *
      * @param key 조회하려는 key 값
      * @return key에 해당하는 value값
      */
@@ -61,7 +64,8 @@ public class RedisRepository {
 
     /**
      * 만료시간 지정 메소드
-     * @param key 대상 key
+     *
+     * @param key  대상 key
      * @param time 만료 기간 (초단위)
      */
     public void setExpire(String key, Long time) {
@@ -71,6 +75,4 @@ public class RedisRepository {
     public Long getTimeToLive(String key) {
         return redisTemplate.getExpire(key);
     }
-
-
 }

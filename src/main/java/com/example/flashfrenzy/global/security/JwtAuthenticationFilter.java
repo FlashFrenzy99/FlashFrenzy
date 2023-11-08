@@ -18,8 +18,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Slf4j(topic = "로그인 및 JWT 생성")
-//authfilter,loggingfilter 대신 편리하게 사용
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+
     private final JwtUtil jwtUtil;
     private final RefreshTokenService refreshTokenService;
     private static final ObjectMapper mapper = new ObjectMapper();
@@ -31,7 +31,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+    public Authentication attemptAuthentication(HttpServletRequest request,
+            HttpServletResponse response) throws AuthenticationException {
         log.debug("로그인 시도");
         // 요청 본문이 비어 있는지 확인
         if (request.getContentLength() == 0) {
@@ -52,27 +53,31 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+    protected void successfulAuthentication(HttpServletRequest request,
+            HttpServletResponse response, FilterChain chain, Authentication authResult)
+            throws IOException, ServletException {
         log.debug("로그인 성공 및 JWT 생성");
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
         UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
-        Long basketkey = (((UserDetailsImpl) authResult.getPrincipal()).getUser().getBasket().getId());
+        Long basketkey = (((UserDetailsImpl) authResult.getPrincipal()).getUser().getBasket()
+                .getId());
 
-        String token = jwtUtil.createToken(username, role,basketkey);
-        String refreshToken = refreshTokenService.createRefreshToken(username ,role, basketkey);
+        String token = jwtUtil.createToken(username, role, basketkey);
+        String refreshToken = refreshTokenService.createRefreshToken(username, role, basketkey);
         jwtUtil.addJwtToCookie(token, refreshToken, response);
 
         response.sendRedirect("/");
-//        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+    protected void unsuccessfulAuthentication(HttpServletRequest request,
+            HttpServletResponse response, AuthenticationException failed)
+            throws IOException, ServletException {
         log.debug("로그인 실패");
         response.setStatus(400);
         String msg = "회원을 찾을 수 없습니다.";
 
-        try(PrintWriter writer = response.getWriter()) {
+        try (PrintWriter writer = response.getWriter()) {
             String jsonDto = mapper.writeValueAsString(msg);
             writer.print(jsonDto);
         } catch (IOException e) {

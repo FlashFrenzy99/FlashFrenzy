@@ -17,7 +17,7 @@ BasketProductResponseDto {
     private Long stock;
 
 
-    public BasketProductResponseDto(BasketProduct basketProduct){
+    public BasketProductResponseDto(BasketProduct basketProduct) {
         this.BasketProductId = basketProduct.getId();
         this.title = basketProduct.getProduct().getTitle();
         this.image = basketProduct.getProduct().getImage();

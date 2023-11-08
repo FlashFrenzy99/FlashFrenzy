@@ -22,7 +22,6 @@ public class ProductResponseDto {
 
     private Long stock;
 
-
     public ProductResponseDto(Product product) {
         this.id = product.getId();
         this.title = product.getTitle();
@@ -32,7 +31,7 @@ public class ProductResponseDto {
         this.category2 = product.getCategory2();
     }
 
-    public ProductResponseDto(Product product,int saleRate) {
+    public ProductResponseDto(Product product, int saleRate) {
         this.id = product.getId();
         this.title = product.getTitle();
         this.image = product.getImage();
@@ -41,7 +40,7 @@ public class ProductResponseDto {
         this.category2 = product.getCategory2();
     }
 
-    public ProductResponseDto(Product product, Long price,Long stock) {
+    public ProductResponseDto(Product product, Long price, Long stock) {
         this.id = product.getId();
         this.title = product.getTitle();
         this.image = product.getImage();

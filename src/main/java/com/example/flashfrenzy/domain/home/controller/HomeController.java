@@ -17,24 +17,24 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.List;
-
 @RequiredArgsConstructor
 @Controller
 @Slf4j
 public class HomeController {
+
     private final ProductService productService;
 
     @GetMapping
-    public String home(Model model, @PageableDefault(size = 15, sort = "id", direction = Direction.ASC) Pageable pageable)
+    public String home(Model model,
+            @PageableDefault(size = 15, sort = "id", direction = Direction.ASC) Pageable pageable)
             throws JsonProcessingException {
         long startTime = System.currentTimeMillis();
         List<ProductRankDto> productRankList = productService.getProductRank();
         Page<ProductResponseDto> productList = productService.getProducts(pageable);
-        log.debug("홈화면 조회 elapsed time : "  + (System.currentTimeMillis() - startTime) + "ms.");
-
+        log.debug("홈화면 조회 elapsed time : " + (System.currentTimeMillis() - startTime) + "ms.");
         model.addAttribute("productList", productList);
         model.addAttribute("productRankList", productRankList);
+        model.addAttribute("currentPage", pageable.getPageNumber());
         return "product-list";
     }
 
