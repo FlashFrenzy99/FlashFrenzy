@@ -45,9 +45,8 @@
         <tr th:each="product : ${productList}">
             <td th:text="${product.id}"></td>
             <td th:text="${product.title}"></td>
-            <td><a th:href="@{/api/products/{id}(id=${product.id})}">
+            <td>
                 <img th:src="${product.image}" width="100" height="120">
-            </a>
             </td>
             <td th:text="${product.price}"></td>
             <td th:text="${product.category1}"></td>

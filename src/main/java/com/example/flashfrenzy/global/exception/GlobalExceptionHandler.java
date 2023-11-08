@@ -12,6 +12,6 @@ public class GlobalExceptionHandler {
     public String ExHandler(Exception ex) {
         log.error(ex.toString());
         ex.printStackTrace();
-        return "error/404";
+        return "error/error";
     }
 }
