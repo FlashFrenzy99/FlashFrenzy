@@ -12,13 +12,10 @@ import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
 import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 @RequiredArgsConstructor
 @Component
 public class CustomProductSearchRepositoryImpl implements CustomProductSearchRepository {
+
     private final ElasticsearchOperations elasticsearchOperations;
 
     @Override
@@ -28,6 +25,5 @@ public class CustomProductSearchRepositoryImpl implements CustomProductSearchRep
         SearchHits<Product> search = elasticsearchOperations.search(query, Product.class);
         return (Page<Product>) search
                 .map(SearchHit::getContent).stream();
-                //.collect(Collectors.toList());
     }
 }

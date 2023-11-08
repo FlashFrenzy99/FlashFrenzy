@@ -2,7 +2,13 @@
 package com.example.flashfrenzy.domain.product.entity;
 
 import com.example.flashfrenzy.global.data.dto.ItemDto;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -14,6 +20,7 @@ import org.springframework.data.elasticsearch.annotations.Field;
 @Document(indexName = "product")
 @Table(name = "product", indexes = @Index(name = "idx_category1", columnList = "category1"))
 public class Product {
+
     @Id
     @Column(name = "product_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,7 +51,8 @@ public class Product {
         this.category2 = itemDto.getCategory2();
     }
 
-    public Product(Long id, String title, String image, Long price, String category1, String category2, Long stock) {
+    public Product(Long id, String title, String image, Long price, String category1,
+            String category2, Long stock) {
         this.id = id;
         this.title = title;
         this.image = image;

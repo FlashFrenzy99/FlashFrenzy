@@ -15,13 +15,12 @@ import com.example.flashfrenzy.global.kafka.producer.OrderProducer;
 import com.example.flashfrenzy.global.redis.RedisRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.common.util.set.Sets;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +39,6 @@ public class OrderService {
     public void orderBasketProducts(Long id) {
         log.debug("장바구니 상품 주문");
 
-        // 장바구니 존재 여부 확인
         Basket basket = basketRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당 장바구니가 존재하지 않습니다.")
         );
@@ -55,7 +53,8 @@ public class OrderService {
         String eventIdListString = redisRepository.getValue("product:sale:list");
         if (eventIdListString != null) {
             try {
-                eventIdList = Sets.newHashSet(objectMapper.readValue(eventIdListString, Long[].class));
+                eventIdList = Sets.newHashSet(
+                        objectMapper.readValue(eventIdListString, Long[].class));
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
@@ -79,16 +78,14 @@ public class OrderService {
         User user = basket.getUser();
         Order order = new Order();
         order.addUser(user);
-        for(OrderProduct orderProduct : orderProductList){
+        for (OrderProduct orderProduct : orderProductList) {
             order.addOrderProduct(orderProduct);
         }
         orderRepository.save(order);
 
-        // producer
         orderProducer.createOrder(orderProductList);
 
-        //주문 후 장바구니 내역 삭제
-        // basketService.clearBasket(basket.getId());
+        basketService.clearBasket(basket.getId());
 
     }
 }

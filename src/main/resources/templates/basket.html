@@ -17,6 +17,8 @@
         document.addEventListener('DOMContentLoaded', function () {
             // 폼을 모두 가져옵니다.
             const forms = document.querySelectorAll('.dynamic-form');
+            const products = document.querySelectorAll()
+
             // 각 폼에 대한 반복문을 실행합니다.
             forms.forEach(function (form) {
                 form.addEventListener('submit', function (event) {
@@ -62,8 +64,30 @@
         </tr>
         </tbody>
     </table>
-    <form action="#" class="dynamic-form" method="post">
-        <input type="submit" value="구매하기">
-    </form>
+    <div th:if="${#lists.size(basketProducts) > 0}">
+        <form action="#" class="dynamic-form" method="post">
+            <input type="submit" value="구매하기">
+        </form>
+    </div>
+
+
+
+    <div th:if="${}">
+
+        </div>
+
+
+    <div>
+        <ul class="pagination">
+            <li><a href="/?page=1" class="active">1</a></li>
+            <li><a href="/?page=2">2</a></li>
+            <li><a href="/?page=3">3</a></li>
+            <li><a href="/?page=4">4</a></li>
+            <li><a href="/?page=5">5</a></li>
+            <!-- 추가 페이지 버튼을 필요한 수만큼 반복해서 생성 -->
+        </ul>
+    </div>
+
 </th:block>
 </html>
+

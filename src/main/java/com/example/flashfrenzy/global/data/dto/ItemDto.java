@@ -9,6 +9,7 @@ import org.json.JSONObject;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ItemDto {
+
     private String title;
     private String image;
     private Long price;
@@ -16,7 +17,7 @@ public class ItemDto {
     private String category2; // 중분류  ex) 하의, 상의
 
     public ItemDto(JSONObject itemJson) {
-        this.title = itemJson.getString("title").replace("<b>","").replace("</b>","");
+        this.title = itemJson.getString("title").replace("<b>", "").replace("</b>", "");
         this.image = itemJson.getString("image");
         this.price = (long) itemJson.getInt("lprice");
         this.category1 = itemJson.getString("category1");

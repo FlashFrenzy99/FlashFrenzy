@@ -6,31 +6,35 @@ import com.example.flashfrenzy.global.redis.RedisRepository;
 import com.example.flashfrenzy.global.redis.RefreshTokenService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 @Slf4j(topic = "JWT 관련 로그")
 @Component
 @RequiredArgsConstructor
 public class JwtUtil {
-
-    //쿠키를 직접 만들어서 토큰을 담아 쿠키를 Response 객체에 담아 반환
 
     // JWT 데이터
     // accessToken 값, Header name, 권환 이름 (user or admin)
@@ -43,6 +47,7 @@ public class JwtUtil {
 
     // 사용자 권한 값의 KEY, 권한을 구분하기 위함
     public static final String AUTHORIZATION_KEY = "auth";
+
     public static final String BASKET_KEY = "basket";
     // Token 식별자
     public static final String BEARER_PREFIX = "Bearer ";
@@ -114,7 +119,8 @@ public class JwtUtil {
 
     // 토큰 검증, JWT 위변조 확인
     // parseBuilder() : 구성 성분을 분해하고 분석
-    public String validateToken(String accessToken, String refreshTokenValue, HttpServletResponse res) {
+    public String validateToken(String accessToken, String refreshTokenValue,
+            HttpServletResponse res) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken);
             log.debug("Valid JWT Token");
@@ -142,10 +148,12 @@ public class JwtUtil {
                 accessToken = createToken(username, role, key);
 
                 //Refresh Token Rotation (기존 Refresh 토큰 제거 후 새로 발급)
-                Long refreshExpireTime = refreshTokenService.getRefreshTokenTimeToLive(REFRESH_PREFIX + refreshTokenValue);
+                Long refreshExpireTime = refreshTokenService.getRefreshTokenTimeToLive(
+                        REFRESH_PREFIX + refreshTokenValue);
                 redisRepository.setExpire(REFRESH_PREFIX + refreshTokenValue, 0L);
 
-                String newRefreshToken = refreshTokenService.refreshTokenRotation(username, role, refreshExpireTime, key);
+                String newRefreshToken = refreshTokenService.refreshTokenRotation(username, role,
+                        refreshExpireTime, key);
 
                 addJwtToCookie(accessToken, newRefreshToken, res);
 

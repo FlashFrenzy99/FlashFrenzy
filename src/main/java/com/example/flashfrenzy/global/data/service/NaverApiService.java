@@ -5,6 +5,9 @@ import com.example.flashfrenzy.domain.product.repository.ProductRepository;
 import com.example.flashfrenzy.domain.stock.entity.Stock;
 import com.example.flashfrenzy.domain.stock.repository.StockRepository;
 import com.example.flashfrenzy.global.data.dto.ItemDto;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -16,10 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-
 @Slf4j(topic = "NAVER API")
 @Service
 public class NaverApiService {
@@ -28,7 +27,8 @@ public class NaverApiService {
     private final ProductRepository productRepository;
     private final StockRepository stockRepository;
 
-    public NaverApiService(RestTemplateBuilder builder, ProductRepository productRepository, StockRepository stockRepository) {
+    public NaverApiService(RestTemplateBuilder builder, ProductRepository productRepository,
+            StockRepository stockRepository) {
         this.restTemplate = builder.build();
         this.productRepository = productRepository;
         this.stockRepository = stockRepository;
@@ -42,18 +42,17 @@ public class NaverApiService {
 
     public void searchItems(String query) {
         long start = System.currentTimeMillis();
-        // 요청 URL 만들기
         List<Product> productList = new ArrayList<>();
         List<Stock> stockList = new ArrayList<>();
 
-         for (int i = 1; i <= 10; i++) {
+        for (int i = 1; i <= 10; i++) {
             URI uri = UriComponentsBuilder
                     .fromUriString("https://openapi.naver.com")
                     .path("/v1/search/shop.json")
                     .queryParam("display", 100)
                     .queryParam("start", i)
                     .queryParam("query", query)
-                    .queryParam("sort" , "date")
+                    .queryParam("sort", "date")
                     .encode()
                     .build()
                     .toUri();
@@ -65,7 +64,8 @@ public class NaverApiService {
                     .header("X-Naver-Client-Secret", clientSecret)
                     .build();
 
-            ResponseEntity<String> responseEntity = restTemplate.exchange(requestEntity, String.class);
+            ResponseEntity<String> responseEntity = restTemplate.exchange(requestEntity,
+                    String.class);
 
             log.debug("NAVER API Status Code : " + responseEntity.getStatusCode());
 
@@ -85,7 +85,7 @@ public class NaverApiService {
 
     public List<ItemDto> fromJSONtoItems(String responseEntity) {
         JSONObject jsonObject = new JSONObject(responseEntity);
-        JSONArray items  = jsonObject.getJSONArray("items");
+        JSONArray items = jsonObject.getJSONArray("items");
         List<ItemDto> itemDtoList = new ArrayList<>();
 
         for (int j = 0; j < 1000; j++) {

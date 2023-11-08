@@ -8,6 +8,8 @@ import com.example.flashfrenzy.domain.user.dto.SignupRequestDto;
 import com.example.flashfrenzy.domain.user.entity.User;
 import com.example.flashfrenzy.domain.user.entity.UserRoleEnum;
 import com.example.flashfrenzy.domain.user.repository.UserRepository;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -15,9 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

@@ -15,7 +15,7 @@ public class BasketResponseDto {
 
     private List<BasketProduct> list = new ArrayList<>();
 
-    public void setBasket(BasketProduct basket){
+    public void setBasket(BasketProduct basket) {
         list.add(basket);
     }
 }

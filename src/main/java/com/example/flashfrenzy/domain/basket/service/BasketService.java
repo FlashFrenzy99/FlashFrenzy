@@ -31,26 +31,23 @@ public class BasketService {
     private final ProductRepository productRepository;
     private final EventRepository eventRepository;
 
-    /**
-     * 최적화 완료
-     */
     public List<BasketProductResponseDto> getBasket(User user) {
         log.debug("장바구니 조회");
         Basket basket = basketRepository.findById(user.getBasket().getId()).orElseThrow(() ->
                 new IllegalArgumentException("해당 장바구니를 찾을 수 없습니다."));
         List<BasketProduct> list = basketProductRepository.findByBasketId(basket.getId());
 
-
         Set<Long> eventIdList = eventRepository.findProductIdSet();
 
         return list.stream()
                 .map(basketProduct -> {
                     if (eventIdList.contains(basketProduct.getProduct().getId())) {
-                        Event event = eventRepository.findByProductId(basketProduct.getProduct().getId()).orElseThrow(
+                        Event event = eventRepository.findByProductId(
+                                basketProduct.getProduct().getId()).orElseThrow(
                                 () -> new IllegalArgumentException("해당 이벤트 상품이 없습니다.")
                         );
-                        return new BasketProductResponseDto(basketProduct,event.getSaleRate());
-                    }else {
+                        return new BasketProductResponseDto(basketProduct, event.getSaleRate());
+                    } else {
                         return new BasketProductResponseDto(basketProduct);
                     }
                 }).toList();
@@ -80,7 +77,8 @@ public class BasketService {
         }
 
         // 해당 상품과 갯수를 사용해서 basketProduct 생성
-        BasketProduct basketProduct = new BasketProduct(basketRequestDto.getCount(), basket, product);
+        BasketProduct basketProduct = new BasketProduct(basketRequestDto.getCount(), basket,
+                product);
         basket.getList().add(basketProduct);
         basketProductRepository.save(basketProduct);
     }

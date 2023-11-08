@@ -1,13 +1,11 @@
 package com.example.flashfrenzy.domain.event.repository;
 
 import com.example.flashfrenzy.domain.event.entity.Event;
-import com.example.flashfrenzy.domain.product.entity.Product;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
-import java.util.List;
-import java.util.Set;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
 
@@ -16,7 +14,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     @Query("select e from Event e join fetch e.product")
     List<Event> findEventProductList();
-
 
     Optional<Event> findByProductId(Long id);
 }

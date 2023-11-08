@@ -16,14 +16,14 @@ import org.hibernate.annotations.Where;
 @AllArgsConstructor // test
 @Where(clause = "deleted_at IS NULL")
 @SQLDelete(sql = "UPDATE basket_product SET deleted_at = CURRENT_TIMESTAMP where basket_product_id = ?")
-public class BasketProduct extends TimeStamp{
+public class BasketProduct extends TimeStamp {
 
     @Id
     @Column(name = "basket_product_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "count",nullable = false)
+    @Column(name = "count", nullable = false)
     private Long count;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -33,7 +33,6 @@ public class BasketProduct extends TimeStamp{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
-
 
     public BasketProduct(Long count, Basket basket, Product product) {
         this.count = count;
