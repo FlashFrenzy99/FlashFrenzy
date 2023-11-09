@@ -74,15 +74,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             HttpServletResponse response, AuthenticationException failed)
             throws IOException, ServletException {
         log.debug("로그인 실패");
-        response.setStatus(400);
-        String msg = "회원을 찾을 수 없습니다.";
 
-        try (PrintWriter writer = response.getWriter()) {
-            String jsonDto = mapper.writeValueAsString(msg);
-            writer.print(jsonDto);
-        } catch (IOException e) {
-            log.error("예외 발생: ", e);
-            throw new RuntimeException("요청 처리 중 오류가 발생했습니다.");
-        }
+        String errorMessage = "회원 정보가 일치하지 않습니다.";
+        request.getSession().setAttribute("errorMessage", errorMessage);
+
+        // 리다이렉트
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        response.sendRedirect("/auth/users/sign-in-page");
+
+
+
     }
 }
