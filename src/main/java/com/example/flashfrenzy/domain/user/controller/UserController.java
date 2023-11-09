@@ -39,7 +39,7 @@ public class UserController {
     @PostMapping("/sign-up")
     public String signUp(@ModelAttribute SignupRequestDto requestDto) {
         userService.signup(requestDto);
-        return "redirect:/auth/users/login-page";
+        return "redirect:/auth/users/sign-in-page";
     }
 
     @GetMapping("/my-page")
