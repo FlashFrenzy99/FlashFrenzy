@@ -24,7 +24,7 @@ public class OrderProducer {
 
         try {
             String orderMessage = objectMapper.writeValueAsString(orderProductList); // <- 흠
-            CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send("order",
+            CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send("order-2",
                     orderMessage);
             future.whenComplete((result, ex) -> {
                 if (ex == null) {
